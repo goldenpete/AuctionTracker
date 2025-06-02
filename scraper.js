@@ -18,8 +18,10 @@ const fs = require("fs");
     await new Promise(resolve => setTimeout(resolve, 30000));
 
     while (true) {
-        console.log("Fetching auction data...");
+        console.log("Refreshing auction page...");
+        await page.reload(); // Refresh the page before fetching new data
 
+        console.log("Fetching auction data...");
         await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
         await new Promise(resolve => setTimeout(resolve, 30000));
