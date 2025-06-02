@@ -1,5 +1,10 @@
+/* Import Google Font (with heavier weights) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body {
   background-color: rgb(141, 70, 255);
+  font-family: 'Roboto', sans-serif; /* Apply Roboto as the default font */
+  font-weight: 500; /* Slightly thicker than default */
 }
 
 #auction-container {
@@ -32,6 +37,21 @@ body {
   padding: 10px; /* Adds space inside the card */
   line-height: 1.6; /* Improves readability */
   font-size: 1.1rem; /* Slightly larger text */
-  font-weight: bold; /* Makes auction text stand out */
   text-align: left; /* Aligns content for better readability */
+  font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+  font-weight: 500; /* Make the text thicker */
+}
+
+/* Make only the auction title bold */
+.mdl-card__title-text p:first-of-type {
+  font-weight: 700; /* Bolder weight for titles */
+}
+
+/* Center the header text */
+.mdl-layout-title {
+  width: 100%; /* Ensures full-width centering */
+  text-align: center; /* Centers text properly */
+  display: block;
+  font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+  font-weight: 700; /* Make header text thicker */
 }
