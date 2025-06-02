@@ -2,22 +2,28 @@ body {
   background-color: rgb(141, 70, 255);
 }
 
-.page-content {
-  color: white;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 1.25rem;
+#auction-container {
+  display: flex;
+  flex-wrap: wrap; /* Allows cards to wrap properly */
+  justify-content: center; /* Centers cards nicely */
+  gap: 15px; /* Adds spacing between cards */
+  padding: 20px;
 }
 
 .mdl-card {
-  width: 320px;
-  margin: 15px auto;
-  padding: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  flex: 1 1 300px; /* Makes cards responsive */
+  max-width: 400px; /* Prevents overly wide cards */
+  min-width: 250px; /* Ensures cards don’t shrink too much */
 }
 
 .mdl-card__title {
   background: linear-gradient(rgba(53, 50, 206, 1), rgba(53, 50, 206, 1));
   color: white;
   text-align: center;
+}
+
+.page-content {
+  color: white;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.25rem;
 }
