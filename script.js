@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "guycot carbine": "inventory/guycot-carbine.webp",
                 "guycot pistol": "inventory/guycot-pistol.webp",
                 "jezail": "inventory/jezail.webp",
-                "kukri": "inventory/kukri.webp", // Ensure this path is correct if it works
+                "kukri": "inventory/kukri.webp",
                 "lancaster": "inventory/lancaster.webp",
                 "paterson": "inventory/paterson.webp",
                 "prototype": "inventory/prototype.webp",
@@ -32,24 +32,19 @@ document.addEventListener("DOMContentLoaded", function () {
             auctionContainer.innerHTML = auctions.map(auction => {
                 const auctionLines = auction.split("\n");
 
-                // --- MODIFICATION START ---
-                // Find the first non-empty line to use as the item title
                 let itemTitle = "";
                 for (const line of auctionLines) {
                     const trimmedLine = line.trim();
                     if (trimmedLine !== "") {
                         itemTitle = trimmedLine.toLowerCase();
-                        break; // Found the first non-empty line, use it as title
+                        break;
                     }
                 }
-                // If all lines in the block were empty, itemTitle will remain ""
-                // --- MODIFICATION END ---
 
                 console.log(`Checking item: ${itemTitle}`);
 
                 let imageSrc = "default.png"; // Default image if no match
 
-                // Only attempt to find a keyword if itemTitle is not empty
                 if (itemTitle) {
                     for (const keyword of sortedKeywords) {
                         if (itemTitle.includes(keyword)) {
@@ -62,14 +57,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 console.log(`Final assigned image for '${itemTitle}': ${imageSrc}`);
 
-                // Construct the rest of the auction item's display content
-                // by joining all original lines, or filter out empty leading lines if desired.
-                // For simplicity, joining all lines as before:
                 const displayContent = auctionLines.join("<br>");
 
                 return `
                     <div class="mdl-card mdl-shadow--2dp">
-                        <div class.mdl-card__title mdl-card--expand page-content">
+                        <div class="mdl-card__title mdl-card--expand page-content">
                             <img src="${imageSrc}" alt="${itemTitle || 'Auction Item'}" style="max-width: 100px; float: right; padding: 5px;">
                             ${displayContent}
                         </div>
@@ -78,4 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }).join("");
         })
         .catch(error => console.error("Error loading auction data:", error));
+
+    // Auto-refresh the page every 2 minutes
+    setInterval(() => {
+        console.log("Refreshing the page...");
+        location.reload();
+    }, 120000); // 120,000 ms = 2 minutes
 });
