@@ -5,23 +5,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const auctionContainer = document.getElementById("auction-container");
 
             const imageMap = {
-                "accordion": "inventory/accordion.png",
-                "drum": "inventory/drum.png",
-                "fiddle": "inventory/fiddle.png",
-                "flute": "inventory/flute.png",
-                "guitar": "inventory/guitar.png",
-                "harmonica": "inventory/harmonica.png",
-                "trumpet": "inventory/trumpet.png",
-                "ticket": "inventory/ticket.png",
-                "axegonne": "inventory/axegonne.png",
-                "guycot carbine": "inventory/guycot-carbine.png",
-                "guycot pistol": "inventory/guycot-pistol.png",
-                "jezail": "inventory/jezail.png",
-                "kukri": "inventory/kukri.png", // Ensure this path is correct if it works
-                "lancaster": "inventory/lancaster.png",
-                "paterson": "inventory/paterson.png",
-                "prototype": "inventory/prototype.png",
-                "spitefire": "inventory/spitefire.png"
+                "accordion": "inventory/accordion.webp",
+                "drum": "inventory/drum.webp",
+                "fiddle": "inventory/fiddle.webp",
+                "flute": "inventory/flute.webp",
+                "guitar": "inventory/guitar.webp",
+                "harmonica": "inventory/harmonica.webp",
+                "trumpet": "inventory/trumpet.webp",
+                "ticket": "inventory/ticket.webp",
+                "axegonne": "inventory/axegonne.webp",
+                "guycot carbine": "inventory/guycot-carbine.webp",
+                "guycot pistol": "inventory/guycot-pistol.webp",
+                "jezail": "inventory/jezail.webp",
+                "kukri": "inventory/kukri.webp", // Ensure this path is correct if it works
+                "lancaster": "inventory/lancaster.webp",
+                "paterson": "inventory/paterson.webp",
+                "prototype": "inventory/prototype.webp",
+                "spitefire": "inventory/spitefire.webp"
             };
 
             // Sort keywords by length (descending) to prioritize more specific matches
