@@ -31,17 +31,24 @@ document.addEventListener("DOMContentLoaded", function () {
             auctionContainer.innerHTML = auctions.map(auction => {
                 const auctionLines = auction.split("\n");
 
-                // Extract item title (first line) and convert to lowercase
-                const itemTitle = auctionLines[0].toLowerCase();
+                // Ensure itemTitle is properly declared before use
+                let itemTitle = auctionLines.length > 0 ? auctionLines[0].toLowerCase() : "";
+
+                // Debugging: Log item title
+                console.log(`Checking item: ${itemTitle}`);
 
                 // Find the first matching image and stop checking after a match
                 let imageSrc = "default.png"; // Default image if no match
                 for (const keyword of Object.keys(imageMap)) {
                     if (itemTitle.includes(keyword)) {
                         imageSrc = imageMap[keyword]; 
+                        console.log(`Match found: ${keyword} → ${imageSrc}`); // Log matched keyword and image
                         break; // Stops checking after first match
                     }
                 }
+
+                // Debugging: Log final assigned image
+                console.log(`Final assigned image for '${itemTitle}': ${imageSrc}`);
 
                 // Display auction details with matched image
                 return `
