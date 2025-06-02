@@ -6,23 +6,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Define keyword-to-image mapping
             const imageMap = {
-                "accordion": "inventory/instruments/accordion.png",
-                "drum": "inventory/instruments/drum.png",
-                "fiddle": "inventory/instruments/fiddle.png",
-                "flute": "inventory/instruments/flute.png",
-                "guitar": "inventory/instruments/guitar.png",
-                "harmonica": "inventory/instruments/harmonica.png",
-                "trumpet": "inventory/instruments/trumpet.png",
-                "ticket": "inventory/items/ticket.png",
-                "axegonne": "inventory/weapons/axegonne.png",
-                "guycot carbine": "inventory/weapons/guycot-carbine.png",
-                "guycot pistol": "inventory/weapons/guycot-pistol.png",
-                "jezail": "inventory/weapons/jezail.png",
-                "kukri": "inventory/weapons/kukri.png",
-                "lancaster": "inventory/weapons/lancaster.png",
-                "paterson": "inventory/weapons/paterson.png",
-                "prototype": "inventory/weapons/prototype.png",
-                "spitefire": "inventory/weapons/spitefire.png"
+                "accordion": "inventory/accordion.png",
+                "drum": "inventory/drum.png",
+                "fiddle": "inventory/fiddle.png",
+                "flute": "inventory/flute.png",
+                "guitar": "inventory/guitar.png",
+                "harmonica": "inventory/harmonica.png",
+                "trumpet": "inventory/trumpet.png",
+                "ticket": "inventory/ticket.png",
+                "axegonne": "inventory/axegonne.png",
+                "guycot carbine": "inventory/guycot-carbine.png",
+                "guycot pistol": "inventory/guycot-pistol.png",
+                "jezail": "inventory/jezail.png",
+                "kukri": "inventory/kukri.png",
+                "lancaster": "inventory/lancaster.png",
+                "paterson": "inventory/paterson.png",
+                "prototype": "inventory/prototype.png",
+                "spitefire": "inventory/spitefire.png"
             };
 
             // Split auctions using "---" separator
@@ -34,15 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Extract item title (first line) and convert to lowercase
                 const itemTitle = auctionLines[0].toLowerCase();
 
-                // Find matching image
+                // Find the first matching image and stop checking after a match
                 let imageSrc = "default.png"; // Default image if no match
-                Object.keys(imageMap).forEach(keyword => {
+                for (const keyword of Object.keys(imageMap)) {
                     if (itemTitle.includes(keyword)) {
-                        imageSrc = imageMap[keyword];
+                        imageSrc = imageMap[keyword]; 
+                        break; // Stops checking after first match
                     }
-                });
+                }
 
-                // Display auction details with matching image
+                // Display auction details with matched image
                 return `
                     <div class="mdl-card mdl-shadow--2dp">
                         <div class="mdl-card__title mdl-card--expand page-content">
