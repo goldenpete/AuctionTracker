@@ -5,15 +5,21 @@ const fs = require("fs");
     while (true) {
         console.log("Fetching auction data...");
 
-        const browser = await puppeteer.launch({ headless: false }); // UI Mode
+        const browser = await puppeteer.launch({
+            headless: false,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
         const page = await browser.newPage();
         
         await page.goto("https://discord.com/login");
         console.log("Log in manually...");
-        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait for login
+        
+        // Wait 3 minutes to ensure full page load
+        await new Promise(resolve => setTimeout(resolve, 180000));
 
-        await page.goto("https://discord.com/channels/YOUR_SERVER_ID/YOUR_CHANNEL_ID");
-        await page.waitForTimeout(5000);
+        await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
+        await new Promise(resolve => setTimeout(resolve, 180000)); // Again, wait 3 min to ensure full load
 
         const auctionData = await page.evaluate(() => {
             return document.querySelector(".message")?.innerText;
