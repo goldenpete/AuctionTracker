@@ -7,36 +7,16 @@ const fs = require("fs");
 
         const browser = await puppeteer.launch({
             headless: false,
+            userDataDir: "./puppeteer-profile", // Saves session data (cookies, login state)
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
 
-        const cookiesPath = "cookies.json";
-        let cookies = [];
-
-        // Load saved cookies if available
-        if (fs.existsSync(cookiesPath)) {
-            try {
-                const fileData = fs.readFileSync(cookiesPath, "utf8").trim();
-                cookies = fileData ? JSON.parse(fileData) : [];
-                await page.setCookie(...cookies);
-                console.log("Loaded saved login session.");
-            } catch (error) {
-                console.error("Error reading cookies.json, resetting file...");
-                fs.writeFileSync(cookiesPath, JSON.stringify([]));
-            }
-        }
-
         await page.goto("https://discord.com/login");
 
-        // Wait for Discord to fully load
+        // Wait for Discord to fully load before proceeding
         await new Promise(resolve => setTimeout(resolve, 30000));
-
-        // Save cookies after logging in
-        const savedCookies = await page.cookies();
-        fs.writeFileSync(cookiesPath, JSON.stringify(savedCookies));
-        console.log("Cookies saved. You won't have to log in again.");
 
         await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
