@@ -14,16 +14,24 @@ body {
   flex: 1 1 300px; /* Makes cards responsive */
   max-width: 400px; /* Prevents overly wide cards */
   min-width: 250px; /* Ensures cards don’t shrink too much */
+  background-color: rgba(255, 255, 255, 0.15); /* Slight transparency */
+  border-radius: 10px; /* Smooth card edges */
+  padding: 15px; /* More spacing */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow effect */
 }
 
 .mdl-card__title {
   background: linear-gradient(rgba(53, 50, 206, 1), rgba(53, 50, 206, 1));
   color: white;
   text-align: center;
+  padding: 10px; /* Adds internal spacing */
 }
 
-.page-content {
-  color: white;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 1.25rem;
+.mdl-card__title-text {
+  white-space: pre-line; /* Ensures text inside cards respects line breaks */
+  padding: 10px; /* Adds space inside the card */
+  line-height: 1.6; /* Improves readability */
+  font-size: 1.1rem; /* Slightly larger text */
+  font-weight: bold; /* Makes auction text stand out */
+  text-align: left; /* Aligns content for better readability */
 }
