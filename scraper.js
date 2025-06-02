@@ -15,18 +15,25 @@ const fs = require("fs");
         await page.goto("https://discord.com/login");
         console.log("Log in manually...");
         
-        // Wait 3 minutes to ensure full page load
-        await new Promise(resolve => setTimeout(resolve, 180000));
+        // Wait 30 seconds to ensure full page load
+        await new Promise(resolve => setTimeout(resolve, 30000));
 
-        await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
-        await new Promise(resolve => setTimeout(resolve, 180000)); // Again, wait 3 min to ensure full load
+        await page.goto("https://discord.com/channels/YOUR_SERVER_ID/YOUR_CHANNEL_ID");
 
+        // Wait 30 seconds to ensure auction messages are fully loaded
+        await new Promise(resolve => setTimeout(resolve, 30000));
+
+        // Extract auction data using the correct query selector
         const auctionData = await page.evaluate(() => {
-            return document.querySelector(".message")?.innerText;
+            return document.querySelector(".embedWrapper .embedFull")?.innerText;
         });
 
-        console.log("Auction Data:", auctionData);
-        fs.writeFileSync("auction_data.txt", auctionData);
+        if (auctionData) {
+            console.log("Auction Data Found:", auctionData);
+            fs.writeFileSync("auction_data.txt", auctionData);
+        } else {
+            console.log("No auction data found. Retrying in 30 seconds...");
+        }
 
         await browser.close();
         console.log("Next update in 5 minutes...");
