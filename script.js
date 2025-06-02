@@ -73,6 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initial load
     updateAuctionData();
 
-    // **Update auction data every 10 seconds (10,000 ms)**
-    setInterval(updateAuctionData, 10000);
+    // **Update auction data every 30 seconds (30,000 ms)**
+    setInterval(updateAuctionData, 30000);
 });
