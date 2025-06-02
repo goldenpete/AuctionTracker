@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             const auctionContainer = document.getElementById("auction-container");
 
-            // Define keyword-to-image mapping
             const imageMap = {
                 "accordion": "inventory/accordion.png",
                 "drum": "inventory/drum.png",
@@ -18,44 +17,61 @@ document.addEventListener("DOMContentLoaded", function () {
                 "guycot carbine": "inventory/guycot-carbine.png",
                 "guycot pistol": "inventory/guycot-pistol.png",
                 "jezail": "inventory/jezail.png",
-                "kukri": "inventory/kukri.png",
+                "kukri": "inventory/kukri.png", // Ensure this path is correct if it works
                 "lancaster": "inventory/lancaster.png",
                 "paterson": "inventory/paterson.png",
                 "prototype": "inventory/prototype.png",
                 "spitefire": "inventory/spitefire.png"
             };
 
-            // Split auctions using "---" separator
-            const auctions = data.split("---").filter(line => line.trim() !== "");
+            // Sort keywords by length (descending) to prioritize more specific matches
+            const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length);
+
+            const auctions = data.split("---").filter(block => block.trim() !== "");
 
             auctionContainer.innerHTML = auctions.map(auction => {
                 const auctionLines = auction.split("\n");
 
-                // Ensure itemTitle is properly declared before use
-                let itemTitle = auctionLines.length > 0 ? auctionLines[0].toLowerCase() : "";
+                // --- MODIFICATION START ---
+                // Find the first non-empty line to use as the item title
+                let itemTitle = "";
+                for (const line of auctionLines) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine !== "") {
+                        itemTitle = trimmedLine.toLowerCase();
+                        break; // Found the first non-empty line, use it as title
+                    }
+                }
+                // If all lines in the block were empty, itemTitle will remain ""
+                // --- MODIFICATION END ---
 
-                // Debugging: Log item title
                 console.log(`Checking item: ${itemTitle}`);
 
-                // Find the first matching image and stop checking after a match
                 let imageSrc = "default.png"; // Default image if no match
-                for (const keyword of Object.keys(imageMap)) {
-                    if (itemTitle.includes(keyword)) {
-                        imageSrc = imageMap[keyword]; 
-                        console.log(`Match found: ${keyword} → ${imageSrc}`); // Log matched keyword and image
-                        break; // Stops checking after first match
+
+                // Only attempt to find a keyword if itemTitle is not empty
+                if (itemTitle) {
+                    for (const keyword of sortedKeywords) {
+                        if (itemTitle.includes(keyword)) {
+                            imageSrc = imageMap[keyword];
+                            console.log(`Match found for '${itemTitle}': ${keyword} → ${imageSrc}`);
+                            break;
+                        }
                     }
                 }
 
-                // Debugging: Log final assigned image
                 console.log(`Final assigned image for '${itemTitle}': ${imageSrc}`);
 
-                // Display auction details with matched image
+                // Construct the rest of the auction item's display content
+                // by joining all original lines, or filter out empty leading lines if desired.
+                // For simplicity, joining all lines as before:
+                const displayContent = auctionLines.join("<br>");
+
                 return `
                     <div class="mdl-card mdl-shadow--2dp">
-                        <div class="mdl-card__title mdl-card--expand page-content">
-                            <img src="${imageSrc}" alt="${itemTitle}" style="max-width: 100px; float: right; padding: 5px;">
-                            ${auctionLines.join("<br>")}
+                        <div class.mdl-card__title mdl-card--expand page-content">
+                            <img src="${imageSrc}" alt="${itemTitle || 'Auction Item'}" style="max-width: 100px; float: right; padding: 5px;">
+                            ${displayContent}
                         </div>
                     </div>
                 `;
