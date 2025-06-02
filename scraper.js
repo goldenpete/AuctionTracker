@@ -17,11 +17,11 @@ const fs = require("fs");
     // Wait for Discord to fully load before proceeding
     await new Promise(resolve => setTimeout(resolve, 30000));
 
-    async function fetchAuctionData() {
+    while (true) {
         console.log("Fetching auction data...");
         await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
-        await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds for content to load
+        await new Promise(resolve => setTimeout(resolve, 30000));
 
         // Extract multiple auction items
         const auctionData = await page.evaluate(() => {
@@ -34,13 +34,13 @@ const fs = require("fs");
             console.log(auctionData);
             fs.writeFileSync("auction_data.txt", auctionData);
         } else {
-            console.log("No auction data found. Retrying in 10 seconds...");
+            console.log("No auction data found. Retrying in 30 seconds...");
         }
 
         console.log("Refreshing auction page for the next update...");
-        await page.reload(); // Refresh after data is scraped
-    }
+        await page.reload(); // Refresh at the end to get a clean slate for the next run
 
-    // **Run every 10 seconds**
-    setInterval(fetchAuctionData, 10000);
+        console.log("Next update in 5 minutes...");
+        await new Promise(resolve => setTimeout(resolve, 5 * 60 * 1000));
+    }
 })();
