@@ -11,25 +11,38 @@ const fs = require("fs");
         });
 
         const page = await browser.newPage();
-        
+
+        // Load saved cookies if they exist
+        const cookiesPath = "cookies.json";
+        if (fs.existsSync(cookiesPath)) {
+            const cookies = JSON.parse(fs.readFileSync(cookiesPath));
+            await page.setCookie(...cookies);
+        }
+
         await page.goto("https://discord.com/login");
-        console.log("Log in manually...");
-        
-        // Wait 30 seconds to ensure the page loads fully
+
+        // Wait for Discord to fully load
         await new Promise(resolve => setTimeout(resolve, 30000));
+
+        // Save cookies after logging in
+        const cookies = await page.cookies();
+        fs.writeFileSync(cookiesPath, JSON.stringify(cookies));
+        console.log("Cookies saved. You won't have to log in again.");
 
         await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
-        // Wait another 30 seconds to ensure auction messages are visible
+        // Wait again to ensure auction messages are fully loaded
         await new Promise(resolve => setTimeout(resolve, 30000));
 
-        // Extract auction data from the correct selector
+        // Extract multiple auction items and format them correctly
         const auctionData = await page.evaluate(() => {
-            return document.querySelector("article.embedwrapper_b7e1cb div.embedFields____623de")?.innerText;
+            const auctionElements = document.querySelectorAll("article.embedWrapper_b7e1cb div.embedField__623de");
+            return Array.from(auctionElements).map(el => el.innerText).join("\n---\n");
         });
 
         if (auctionData) {
-            console.log("Auction Data Found:", auctionData);
+            console.log("Auction Data Found:");
+            console.log(auctionData);
             fs.writeFileSync("auction_data.txt", auctionData);
         } else {
             console.log("No auction data found. Retrying in 30 seconds...");
