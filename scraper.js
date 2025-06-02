@@ -18,7 +18,7 @@ const fs = require("fs");
         // Wait 30 seconds to ensure full page load
         await new Promise(resolve => setTimeout(resolve, 30000));
 
-        await page.goto("https://discord.com/channels/YOUR_SERVER_ID/YOUR_CHANNEL_ID");
+        await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
         // Wait 30 seconds to ensure auction messages are fully loaded
         await new Promise(resolve => setTimeout(resolve, 30000));
