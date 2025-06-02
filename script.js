@@ -6,23 +6,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Define keyword-to-image mapping
             const imageMap = {
-                "accordion": "inventory/instruments/accordion.webp",
-                "drum": "inventory/instruments/drum.webp",
-                "fiddle": "inventory/instruments/fiddle.webp",
-                "flute": "inventory/instruments/flute.webp",
-                "guitar": "inventory/instruments/guitar.webp",
-                "harmonica": "inventory/instruments/harmonica.webp",
-                "trumpet": "inventory/instruments/trumpet.webp",
+                "accordion": "inventory/instruments/accordion.png",
+                "drum": "inventory/instruments/drum.png",
+                "fiddle": "inventory/instruments/fiddle.png",
+                "flute": "inventory/instruments/flute.png",
+                "guitar": "inventory/instruments/guitar.png",
+                "harmonica": "inventory/instruments/harmonica.png",
+                "trumpet": "inventory/instruments/trumpet.png",
                 "ticket": "inventory/items/ticket.png",
-                "axegonne": "inventory/weapons/axegonne.webp",
-                "guycot carbine": "inventory/weapons/guycot-carbine.webp",
-                "guycot pistol": "inventory/weapons/guycot-pistol.webp",
+                "axegonne": "inventory/weapons/axegonne.png",
+                "guycot carbine": "inventory/weapons/guycot-carbine.png",
+                "guycot pistol": "inventory/weapons/guycot-pistol.png",
                 "jezail": "inventory/weapons/jezail.png",
                 "kukri": "inventory/weapons/kukri.png",
-                "lancaster": "inventory/weapons/lancaster.webp",
-                "paterson": "inventory/weapons/paterson.webp",
-                "prototype": "inventory/weapons/prototype.webp",
-                "spitefire": "inventory/weapons/spitefire.webp"
+                "lancaster": "inventory/weapons/lancaster.png",
+                "paterson": "inventory/weapons/paterson.png",
+                "prototype": "inventory/weapons/prototype.png",
+                "spitefire": "inventory/weapons/spitefire.png"
             };
 
             // Split auctions using "---" separator
