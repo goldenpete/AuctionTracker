@@ -15,17 +15,17 @@ const fs = require("fs");
         await page.goto("https://discord.com/login");
         console.log("Log in manually...");
         
-        // Wait 30 seconds to ensure full page load
+        // Wait 30 seconds to ensure the page loads fully
         await new Promise(resolve => setTimeout(resolve, 30000));
 
         await page.goto("https://discord.com/channels/1368432887145431112/1375265203855294535");
 
-        // Wait 30 seconds to ensure auction messages are fully loaded
+        // Wait another 30 seconds to ensure auction messages are visible
         await new Promise(resolve => setTimeout(resolve, 30000));
 
-        // Extract auction data using the correct query selector
+        // Extract auction data from the correct selector
         const auctionData = await page.evaluate(() => {
-            return document.querySelector(".embedWrapper .embedFull")?.innerText;
+            return document.querySelector("article.embedwrapper_b7e1cb div.embedFields____623de")?.innerText;
         });
 
         if (auctionData) {
