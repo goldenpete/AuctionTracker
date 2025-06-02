@@ -1,32 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
-    fetch("auction_data.txt")
-        .then(response => response.text())
-        .then(data => {
-            const auctionContainer = document.getElementById("auction-container");
+    const auctionContainer = document.getElementById("auction-container");
 
-            const imageMap = {
-                "accordion": "inventory/accordion.webp",
-                "drum": "inventory/drum.webp",
-                "fiddle": "inventory/fiddle.webp",
-                "flute": "inventory/flute.webp",
-                "guitar": "inventory/guitar.webp",
-                "harmonica": "inventory/harmonica.webp",
-                "trumpet": "inventory/trumpet.webp",
-                "ticket": "inventory/ticket.webp",
-                "axegonne": "inventory/axegonne.webp",
-                "guycot carbine": "inventory/guycot-carbine.webp",
-                "guycot pistol": "inventory/guycot-pistol.webp",
-                "jezail": "inventory/jezail.webp",
-                "kukri": "inventory/kukri.webp",
-                "lancaster": "inventory/lancaster.webp",
-                "paterson": "inventory/paterson.webp",
-                "prototype": "inventory/prototype.webp",
-                "spitefire": "inventory/spitefire.webp"
-            };
+    const imageMap = {
+        "accordion": "inventory/accordion.webp",
+        "drum": "inventory/drum.webp",
+        "fiddle": "inventory/fiddle.webp",
+        "flute": "inventory/flute.webp",
+        "guitar": "inventory/guitar.webp",
+        "harmonica": "inventory/harmonica.webp",
+        "trumpet": "inventory/trumpet.webp",
+        "ticket": "inventory/ticket.webp",
+        "axegonne": "inventory/axegonne.webp",
+        "guycot carbine": "inventory/guycot-carbine.webp",
+        "guycot pistol": "inventory/guycot-pistol.webp",
+        "jezail": "inventory/jezail.webp",
+        "kukri": "inventory/kukri.webp",
+        "lancaster": "inventory/lancaster.webp",
+        "paterson": "inventory/paterson.webp",
+        "prototype": "inventory/prototype.webp",
+        "spitefire": "inventory/spitefire.webp"
+    };
 
-            // Sort keywords by length (descending) to prioritize more specific matches
-            const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length);
+    const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length);
 
+    async function updateAuctionData() {
+        try {
+            const response = await fetch("auction_data.txt");
+            const data = await response.text();
             const auctions = data.split("---").filter(block => block.trim() !== "");
 
             auctionContainer.innerHTML = auctions.map(auction => {
@@ -41,21 +41,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
 
-                console.log(`Checking item: ${itemTitle}`);
-
-                let imageSrc = "default.png"; // Default image if no match
+                let imageSrc = "default.png";
 
                 if (itemTitle) {
                     for (const keyword of sortedKeywords) {
                         if (itemTitle.includes(keyword)) {
                             imageSrc = imageMap[keyword];
-                            console.log(`Match found for '${itemTitle}': ${keyword} → ${imageSrc}`);
                             break;
                         }
                     }
                 }
-
-                console.log(`Final assigned image for '${itemTitle}': ${imageSrc}`);
 
                 const displayContent = auctionLines.join("<br>");
 
@@ -68,12 +63,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 `;
             }).join("");
-        })
-        .catch(error => console.error("Error loading auction data:", error));
 
-    // Auto-refresh the page every 2 minutes
-    setInterval(() => {
-        console.log("Refreshing the page...");
-        location.reload();
-    }, 120000); // 120,000 ms = 2 minutes
+            console.log("Auction data updated dynamically!");
+        } catch (error) {
+            console.error("Error loading auction data:", error);
+        }
+    }
+
+    // Initial load
+    updateAuctionData();
+
+    // **Update auction data every 10 seconds (10,000 ms)**
+    setInterval(updateAuctionData, 10000);
 });
