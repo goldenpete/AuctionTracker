@@ -55,3 +55,7 @@ body {
   font-family: 'Roboto', sans-serif; /* Apply Roboto font */
   font-weight: 700; /* Make header text thicker */
 }
+
+#action-buttons button {
+  margin: 0 10px 10px 10px; /* Add horizontal and bottom spacing between buttons */
+}
