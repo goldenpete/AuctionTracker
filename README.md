@@ -5,7 +5,7 @@
 
 The goal of this program is to run a website that displays the Auction House status.
 
-Bloxstrap is avaliable for all browsers at [tww-auction.com] (https://tww-auction.com).
+Bloxstrap is avaliable for all browsers at [tww-auction.com](tww-auction.com).
 
 ## Features:
 
