@@ -1,13 +1,25 @@
 # AuctionTracker
 The goal of this program is to run a website that displays the Auction House status.
 
-Process:
-Step one: Scrape information from Bidly, Bidly reads information off of TWW. (scraper.js) -> (auction)
-Step two: Paste information into auction_data.txt (scraper.js) -> (auction_data.txt)
-Step three: Auction data is read by script.js and to be understood by index.html (aucton_data.txt) -> (script.js) -> (index.html)
+## Features:
 
-Result:
+- View auction items on display
+- Clear user interface
+- No login required
+
+## Code:
+
+# Process:
+1. Scrape information from Bidly, Bidly reads information off of TWW. (scraper.js) -> (auction)
+2. Paste information into auction_data.txt (scraper.js) -> (auction_data.txt)
+3. Auction data is read by script.js and to be understood by index.html (aucton_data.txt) -> (script.js) -> (index.html)
+
+# Result:
 User can find out what auction items are being listed without opening the TWW. 
+
+
+
+
 
 > [!CAUTION]
 > The only official places to download Bloxstrap are this GitHub repository and [bloxstraplabs.com](https://bloxstraplabs.com). Any other websites offering downloads or claiming to be us are not controlled by us.
