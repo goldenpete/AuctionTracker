@@ -1,22 +1,22 @@
-<!DOCTYPE html>
-<html lang="en-ca">
+<!DOCTYPE html> <!-- Declare the document type as HTML5 -->
+<html lang="en-ca"> <!-- Set the language of the document to Canadian English -->
     <head>
-        <meta charset="utf-8" />
-        <meta name="description" content="Auction House Status" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-purple.min.css" />
-        <link rel="stylesheet" href="./style.css" />
-        <title>Auction House Status</title>
+        <meta charset="utf-8" /> <!-- Set character encoding to UTF-8 -->
+        <meta name="description" content="Auction House Status" /> <!-- Page description for SEO -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsive design for mobile devices -->
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-purple.min.css" /> <!-- Import Material Design Lite CSS -->
+        <link rel="stylesheet" href="./style.css" /> <!-- Import custom styles -->
+        <title>Auction House Status</title> <!-- Set the page title -->
     </head>
 
     <body>
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        <script src="./script.js"></script>
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- Load Material Design Lite JS (deferred) -->
+        <script src="./script.js"></script> <!-- Load custom JavaScript -->
 
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout__header-row">
-                    <span class="mdl-layout-title">Auction House Status</span>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"> <!-- Main layout container with fixed header -->
+            <header class="mdl-layout__header"> <!-- Header section -->
+                <div class="mdl-layout__header-row"> <!-- Row inside header for content alignment -->
+                    <span class="mdl-layout-title">Auction House Status</span> <!-- Page title in the header -->
                 </div>
             </header>
 
@@ -24,17 +24,21 @@
                 <!-- Auctions will be dynamically added here -->
             </div>
 
-            <div id="action-buttons" style="text-align: center; margin-top: 24px;">
+            <div id="action-buttons" style="text-align: center; margin-top: 24px;"> <!-- Container for action buttons, centered with margin -->
                 <button id="refresh-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     Refresh Auctions
                 </button>
+                <!-- Button to manually refresh auction data -->
 
                 <button id="export-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
                     Export Data
                 </button>
+                <!-- Button to export auction data -->
+
                 <button id="add-auction-button" class="mdl-button mdl-js-button mdl-button--raised">
                     Support Server
                 </button>
+                <!-- Button to redirect to support server or add auction -->
             </div>
         </div>
     </body>

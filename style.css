@@ -1,18 +1,18 @@
 /* Import Google Font (with heavier weights) */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap'); /* Import Roboto font from Google Fonts */
 
 body {
-  background-color: rgb(141, 70, 255);
+  background-color: rgb(141, 70, 255); /* Set the background color of the page */
   font-family: 'Roboto', sans-serif; /* Apply Roboto as the default font */
   font-weight: 500; /* Slightly thicker than default */
 }
 
 #auction-container {
-  display: flex;
+  display: flex; /* Use flexbox for layout */
   flex-wrap: wrap; /* Allows cards to wrap properly */
   justify-content: center; /* Centers cards nicely */
   gap: 15px; /* Adds spacing between cards */
-  padding: 20px;
+  padding: 20px; /* Padding around the container */
 }
 
 .mdl-card {
@@ -26,9 +26,9 @@ body {
 }
 
 .mdl-card__title {
-  background: linear-gradient(rgba(53, 50, 206, 1), rgba(53, 50, 206, 1));
-  color: white;
-  text-align: center;
+  background: linear-gradient(rgba(53, 50, 206, 1), rgba(53, 50, 206, 1)); /* Gradient background for card title */
+  color: white; /* White text color */
+  text-align: center; /* Center the title text */
   padding: 10px; /* Adds internal spacing */
 }
 
@@ -51,7 +51,7 @@ body {
 .mdl-layout-title {
   width: 100%; /* Ensures full-width centering */
   text-align: center; /* Centers text properly */
-  display: block;
+  display: block; /* Make the title a block element */
   font-family: 'Roboto', sans-serif; /* Apply Roboto font */
   font-weight: 700; /* Make header text thicker */
 }
