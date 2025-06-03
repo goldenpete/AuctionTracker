@@ -9,12 +9,12 @@ The goal of this program is to run a website that displays the Auction House sta
 
 ## Code:
 
-# Process:
+### Process:
 1. Scrape information from Bidly, Bidly reads information off of TWW. (scraper.js) -> (auction)
 2. Paste information into auction_data.txt (scraper.js) -> (auction_data.txt)
 3. Auction data is read by script.js and to be understood by index.html (aucton_data.txt) -> (script.js) -> (index.html)
 
-# Result:
+### Result:
 User can find out what auction items are being listed without opening the TWW. 
 
 
