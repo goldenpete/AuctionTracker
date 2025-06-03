@@ -1,11 +1,11 @@
 > [!CAUTION]
-> The only official place to view the code of the tww-auction website is this GitHub repository and [tww-auction.com](tww-auction.com). Any other websites offering downloads or claiming to be us are not controlled by us.
+> The only official place to view the code of the tww-auction website is this GitHub repository and https://tww-auction.com. Any other websites offering downloads or claiming to be us are not controlled by us.
 
 # AuctionTracker
 
 The goal of this program is to run a website that displays the Auction House status.
 
-Bloxstrap is avaliable for all browsers at [tww-auction.com](tww-auction.com).
+Bloxstrap is avaliable for all browsers at https://tww-auction.com.
 
 ## Features:
 
