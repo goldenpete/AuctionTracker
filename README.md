@@ -1,8 +1,7 @@
 > [!CAUTION]
 > The only official places to download Bloxstrap are this GitHub repository and [tww-auction.com](tww-auction.com). Any other websites offering downloads or claiming to be us are not controlled by us.
-<div align="left">
+
 # AuctionTracker
-<div align="left">
 
 The goal of this program is to run a website that displays the Auction House status.
 
