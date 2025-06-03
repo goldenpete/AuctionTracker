@@ -1,5 +1,5 @@
 > [!CAUTION]
-> The only official places to download Bloxstrap are this GitHub repository and [tww-auction.com](tww-auction.com). Any other websites offering downloads or claiming to be us are not controlled by us.
+> The only official place to view the code of the tww-auction website is this GitHub repository and [tww-auction.com](tww-auction.com). Any other websites offering downloads or claiming to be us are not controlled by us.
 
 # AuctionTracker
 
