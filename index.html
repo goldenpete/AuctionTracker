@@ -14,14 +14,22 @@
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- Load Material Design Lite JS (deferred) -->
         <script src="./script.js"></script> <!-- Load custom JavaScript -->
 
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"> <!-- Main layout container with fixed header -->
-            <header class="mdl-layout__header"> <!-- Header section -->
-                <div class="mdl-layout__header-row"> <!-- Row inside header for content alignment -->
-                    <span class="mdl-layout-title">Auction House Status</span> <!-- Page title in the header -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <!-- Add MDL hamburger menu button on the left -->
+                    <button class="mdl-button mdl-js-button mdl-button--icon mdl-layout__drawer-button" aria-label="Open drawer" style="margin-right:8px;">
+                        <i class="material-icons">menu</i>
+                    </button>
+                    <span class="mdl-layout-title">Auction House Status</span>
                     <!-- Right aligned menu below button -->
                         <button id="demo-menu-lower-right"
-                                class="mdl-button mdl-js-button mdl-button--icon">
+                                class="mdl-button mdl-js-button mdl-button--icon" style="position:relative;">
                         <i class="material-icons">more_vert</i>
+                        <span id="keyword-count-badge"
+                              class="mdl-badge mdl-badge--overlap"
+                              data-badge="0"
+                              style="position:absolute; top:2px; right:2px; pointer-events:none; background:transparent;"></span>
                         </button>
 
                         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
@@ -33,6 +41,37 @@
                         </ul>
                 </div>
             </header>
+            <!-- Optionally, add a drawer for navigation if you want it to open something -->
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title" style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 80px;
+                    font-size: 2em;
+                    font-weight: 600;
+                    letter-spacing: 0.04em;
+                    margin: 0;
+                    padding: 0;
+                ">Menu</span>
+                <nav class="mdl-navigation" style="display:flex; flex-direction:column; align-items:center; margin-top:32px;">
+                    <a class="mdl-navigation__link" href="index.html">
+                        <i class="material-icons" style="vertical-align:middle;">dashboard</i> Status
+                    </a>
+                    <a class="mdl-navigation__link" href="past.html">
+                        <i class="material-icons" style="vertical-align:middle;">history</i> Past Auctions
+                    </a>
+                    <a class="mdl-navigation__link" href="about.html">
+                        <i class="material-icons" style="vertical-align:middle;">info</i> About
+                    </a>
+                    <a class="mdl-navigation__link" href="contact.html">
+                        <i class="material-icons" style="vertical-align:middle;">mail</i> Contact
+                    </a>
+                    <a class="mdl-navigation__link" href="https://discord.gg/ynwTEHrmdx" target="_blank">
+                        <i class="material-icons" style="vertical-align:middle;">chat</i> Discord
+                    </a>
+                </nav>
+            </div>
 
             <div id="auction-container">
                 <!-- Auctions will be dynamically added here -->
@@ -299,7 +338,53 @@
             window.open('https://discord.gg/ynwTEHrmdx', '_blank');
         });
 
+        // Helper to get user keywords (shared for both script.js and here)
+        function getUserKeywords() {
+            try {
+                return JSON.parse(localStorage.getItem('auction_keywords') || '[]')
+                    .map(k => k.trim().toLowerCase())
+                    .filter(k => k.length > 0);
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Expose getUserKeywords globally for script.js
+        window.getUserKeywords = getUserKeywords;
+
         // Optionally, check for keywords in your auction logic and notify user when found
+
+        // Update the keyword count badge
+        function updateKeywordCountBadge() {
+            var badge = document.getElementById('keyword-count-badge');
+            if (!badge) return;
+            let keywords = [];
+            try {
+                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+            } catch (e) {}
+            badge.setAttribute('data-badge', keywords.length);
+            badge.style.display = keywords.length > 0 ? 'inline-block' : 'none';
+        }
+
+        // Call on load and after keyword changes
+        updateKeywordCountBadge();
+        window.updateKeywordCountBadge = updateKeywordCountBadge;
+
+        // Patch keyword add/remove to update badge
+        const origShowSnackbar = window.showSnackbar;
+        window.showSnackbar = function(msg) {
+            if (typeof origShowSnackbar === "function") origShowSnackbar(msg);
+            updateKeywordCountBadge();
+        };
+
+        // Also update badge after dialog actions
+        if (window.updateKeywordList) {
+            const origUpdateKeywordList = window.updateKeywordList;
+            window.updateKeywordList = function() {
+                origUpdateKeywordList();
+                updateKeywordCountBadge();
+            };
+        }
         </script>
     </body>
 </html>
