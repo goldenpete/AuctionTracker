@@ -86,6 +86,24 @@
             </div>
         </dialog>
 
+        <!-- Feedback Dialog -->
+        <dialog class="mdl-dialog" id="feedback-dialog">
+            <h4 class="mdl-dialog__title">Feedback</h4>
+            <div class="mdl-dialog__content">
+                <form id="feedback-form">
+                    <div class="mdl-textfield mdl-js-textfield" style="width:100%;">
+                        <textarea class="mdl-textfield__input" type="text" rows="4" id="feedback-input" required style="resize:vertical;"></textarea>
+                        <label class="mdl-textfield__label" for="feedback-input">Enter your feedback...</label>
+                    </div>
+                </form>
+                <div id="feedback-status" style="color:green;display:none;margin-top:8px;"></div>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button type="button" class="mdl-button" id="feedback-submit">Submit</button>
+                <button type="button" class="mdl-button close-feedback">Cancel</button>
+            </div>
+        </dialog>
+
         <script>
         // Helper to get the Add Notification menu item
         function getAddNotificationMenuItem() {
@@ -197,6 +215,60 @@
                 list.appendChild(li);
             });
         }
+
+        // --- Feedback Dialog Logic ---
+        const feedbackDialog = document.getElementById('feedback-dialog');
+        if (typeof dialogPolyfill !== "undefined" && feedbackDialog && !feedbackDialog.showModal) {
+            dialogPolyfill.registerDialog(feedbackDialog);
+        }
+        getMenuItemByText('Feedback').addEventListener('click', () => {
+            document.getElementById('feedback-input').value = '';
+            document.getElementById('feedback-status').style.display = 'none';
+            feedbackDialog.showModal();
+        });
+        feedbackDialog.querySelector('.close-feedback').addEventListener('click', function() {
+            feedbackDialog.close();
+        });
+
+        // Submit feedback on button click or Enter
+        function submitFeedback() {
+            const input = document.getElementById('feedback-input');
+            const status = document.getElementById('feedback-status');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Disable input and button while sending
+            input.disabled = true;
+            document.getElementById('feedback-submit').disabled = true;
+
+            // Send to Discord webhook
+            fetch('YOUR_WEBHOOK_URL_HERE', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: text })
+            }).then(res => {
+                status.textContent = "Feedback sent! Thank you.";
+                status.style.color = "green";
+                status.style.display = "block";
+                input.value = '';
+                setTimeout(() => feedbackDialog.close(), 1200);
+            }).catch(() => {
+                status.textContent = "Failed to send feedback.";
+                status.style.color = "red";
+                status.style.display = "block";
+            }).finally(() => {
+                input.disabled = false;
+                document.getElementById('feedback-submit').disabled = false;
+            });
+        }
+
+        document.getElementById('feedback-submit').addEventListener('click', submitFeedback);
+        document.getElementById('feedback-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitFeedback();
+            }
+        });
 
         // Optionally, check for keywords in your auction logic and notify user when found
         </script>
