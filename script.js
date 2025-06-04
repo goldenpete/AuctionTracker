@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM to be fully loaded before running the script
-    const auctionContainer = document.getElementById("auction-container"); // Get the container element for auctions
-    const refreshButton = document.getElementById("refresh-button"); // Get the refresh button element
-    const exportButton = document.getElementById("export-button"); // Get the export button element
-    const addAuctionButton = document.getElementById("add-auction-button"); // Get the add auction button element
+    const auctionContainer = document.getElementById("auction-container"); // Container for auction cards
+    const refreshButton = document.getElementById("refresh-button"); // Button to manually refresh auctions
+    const exportButton = document.getElementById("export-button"); // Button to export auction data
+    const addAuctionButton = document.getElementById("add-auction-button"); // Button to add a new auction
 
-    const imageMap = { // Map of keywords to image file paths
+    // Map of keywords to image file paths
+    const imageMap = {
         accordion: "inventory/accordion.webp",
         drum: "inventory/drum.webp",
         fiddle: "inventory/fiddle.webp",
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         spitefire: "inventory/spitefire.webp",
     };
 
-    // Map of keywords to links (customize as needed)
+    // Map of keywords to wiki links
     const linkMap = {
         accordion: "https://thewild-west.fandom.com/wiki/Accordion",
         drum: "https://thewild-west.fandom.com/wiki/Drum",
@@ -45,11 +46,24 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         spitefire: "https://thewild-west.fandom.com/wiki/Spitfire_Revolving_Sniper",
     };
 
-    const weaponList = ["axegonne", "guycot carbine", "guycot pistol", "jezail", "kukri", "lancaster", "paterson", "prototype", "spitefire"]; // List of weapon keywords
+    // List of weapon keywords
+    const weaponList = [
+        "axegonne",
+        "guycot carbine",
+        "guycot pistol",
+        "jezail",
+        "kukri",
+        "lancaster",
+        "paterson",
+        "prototype",
+        "spitefire"
+    ];
 
-    const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length); // Sort keywords by length (longest first) for matching
+    // Sorted keywords for best match (longest first)
+    const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length);
 
-    const colorMap = { // Map of keywords to unique, lighter colors
+    // Map of keywords to card background colors
+    const colorMap = {
         accordion: "#ffb300",      // Amber
         drum: "#e57373",           // Red
         fiddle: "#81c784",         // Green
@@ -69,45 +83,50 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         spitefire: "#f44336",      // Bright Red
     };
 
-    async function updateAuctionData() { // Function to fetch and update auction data
+    // Fetch and update auction data
+    async function updateAuctionData() {
         try {
-            const response = await fetch("auction_data.txt"); // Fetch the auction data file
-            const data = await response.text(); // Read the response as text
-            const auctions = data.split("---").filter((block) => block.trim() !== ""); // Split data into auction blocks
+            const response = await fetch("auction_data.txt"); // Fetch auction data file
+            const data = await response.text(); // Read as text
+            const auctions = data.split("---").filter((block) => block.trim() !== ""); // Split into auction blocks
 
-            auctionContainer.innerHTML = auctions // Set the inner HTML of the auction container
-                .map((auction) => { // For each auction block
-                    const auctionLines = auction.split("\n"); // Split auction block into lines
+            // Build HTML for each auction card
+            auctionContainer.innerHTML = auctions
+                .map((auction) => {
+                    const auctionLines = auction.split("\n"); // Split block into lines
 
-                    let itemTitle = ""; // Initialize item title
-                    let matchedKeyword = null; // Initialize matched keyword
-                    let titleIndex = -1; // Track the index of the title line
-                    for (let i = 0; i < auctionLines.length; i++) { // Loop through lines to find the first non-empty line
-                        const trimmedLine = auctionLines[i].trim(); // Trim whitespace from the line
-                        if (trimmedLine !== "") { // If the line is not empty
-                            itemTitle = trimmedLine.toLowerCase(); // Set item title to the lowercased line
-                            titleIndex = i; // Save the index of the title line
-                            break; // Stop after finding the first non-empty line
+                    let itemTitle = ""; // Store the item title
+                    let matchedKeyword = null; // Store matched keyword
+                    let titleIndex = -1; // Index of the title line
+
+                    // Find the first non-empty line as the title
+                    for (let i = 0; i < auctionLines.length; i++) {
+                        const trimmedLine = auctionLines[i].trim();
+                        if (trimmedLine !== "") {
+                            itemTitle = trimmedLine.toLowerCase();
+                            titleIndex = i;
+                            break;
                         }
                     }
 
-                    let imageSrc = "default.png"; // Default image if no match is found
-
-                    if (itemTitle) { // If an item title was found
-                        for (const keyword of sortedKeywords) { // Loop through sorted keywords
-                            if (itemTitle.includes(keyword)) { // If the item title contains the keyword
-                                imageSrc = imageMap[keyword]; // Set the image source to the mapped image
-                                matchedKeyword = keyword; // Set the matched keyword
-                                break; // Stop after the first match
+                    // Find image and keyword match
+                    let imageSrc = "default.png"; // Default image
+                    if (itemTitle) {
+                        for (const keyword of sortedKeywords) {
+                            if (itemTitle.includes(keyword)) {
+                                imageSrc = imageMap[keyword];
+                                matchedKeyword = keyword;
+                                break;
                             }
                         }
                     }
 
-                    let cardColor = colorMap[matchedKeyword] || "#313f92"; // Set card color based on matchedKeyword, fallback to a default if not found
+                    let cardColor = colorMap[matchedKeyword] || "#313f92"; // Card color
 
-                    let imageTag = `<img src="${imageSrc}" alt="${itemTitle || "Auction Item"}" style="max-width: 100px; float: right; padding: 5px;">`; // Create image tag
-                    if (matchedKeyword && linkMap[matchedKeyword]) { // If a link exists for this keyword
-                        imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank">${imageTag}</a>`; // Wrap image in anchor tag
+                    // Build image tag, possibly wrapped in a link
+                    let imageTag = `<img src="${imageSrc}" alt="${itemTitle || "Auction Item"}" style="max-width: 100px; float: right; padding: 5px;">`;
+                    if (matchedKeyword && linkMap[matchedKeyword]) {
+                        imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank">${imageTag}</a>`;
                     }
 
                     // Extract and remove the title line for separate placement
@@ -127,80 +146,80 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     }
 
                     // Only make the info part (numbers/values) larger
-                    const infoRegex = /(:\s*)([\d\w\$\.,#\- ]+)/g;
+                    const infoRegex = /(:\s*)([\d\w\$\.,#\- ]+)/g; // Regex to match info after colon
                     const displayContent = auctionLines
                         .map(line =>
                             line.replace(infoRegex, (match, p1, p2) => `${p1}<span style="font-size:1.2em;">${p2}</span>`)
                         )
-                        .join("<br>");
+                        .join("<br>"); // Join lines for display
 
+                    // Return the HTML for this auction card
                     return `
-    <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};">
-        <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent; display: flex; flex-direction: column; min-height: 220px;">
-            ${titleHtml}
-            <div style="flex:1 0 auto;">
-                ${imageTag}
-            </div>
-            <div style="margin-top: 10px; text-align: center;">
-                <div style="display: inline-block; vertical-align: top; text-align: center;">
-                    ${displayContent}
-                </div>
-            </div>
-        </div>
-    </div>
-`; // Return the HTML for this auction block
+                        <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};">
+                            <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent; display: flex; flex-direction: column; min-height: 220px;">
+                                ${titleHtml}
+                                <div style="flex:1 0 auto;">
+                                    ${imageTag}
+                                </div>
+                                <div style="margin-top: 10px; text-align: center;">
+                                    <div style="display: inline-block; vertical-align: top; text-align: center;">
+                                        ${displayContent}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 })
-                .join(""); // Join all auction HTML blocks into a single string
+                .join(""); // Join all auction cards
 
-            console.log("Auction data updated dynamically!"); // Log successful update
+            console.log("Auction data updated dynamically!"); // Log update
         } catch (error) {
-            console.error("Error loading auction data:", error); // Log any errors
+            console.error("Error loading auction data:", error); // Log errors
         }
     }
 
-    function exportAuctionData() { // Function to export auction data as a file
-        fetch("auction_data.txt") // Fetch the auction data file
-            .then((response) => response.text()) // Read the response as text
-            .then((data) => { // When data is received
-                const blob = new Blob([data], { type: "text/plain" }); // Create a Blob from the data
-                const a = document.createElement("a"); // Create a temporary anchor element
-                a.href = URL.createObjectURL(blob); // Set the href to the Blob URL
-                a.download = "auction_data.txt"; // Set the download filename
-                document.body.appendChild(a); // Add the anchor to the document
-                a.click(); // Trigger the download
-                document.body.removeChild(a); // Remove the anchor from the document
-                console.log("Auction data exported successfully!"); // Log successful export
+    // Export auction data as a file
+    function exportAuctionData() {
+        fetch("auction_data.txt") // Fetch auction data file
+            .then((response) => response.text()) // Read as text
+            .then((data) => {
+                const blob = new Blob([data], { type: "text/plain" }); // Create a Blob
+                const a = document.createElement("a"); // Create anchor
+                a.href = URL.createObjectURL(blob); // Set href to Blob URL
+                a.download = "auction_data.txt"; // Set download filename
+                document.body.appendChild(a); // Add anchor to document
+                a.click(); // Trigger download
+                document.body.removeChild(a); // Remove anchor
+                console.log("Auction data exported successfully!"); // Log export
             })
-            .catch((error) => console.error("Error exporting auction data:", error)); // Log any errors
+            .catch((error) => console.error("Error exporting auction data:", error)); // Log errors
     }
 
-    // Initial load
-    updateAuctionData(); // Load auction data when the page loads
+    updateAuctionData(); // Initial load of auction data
 
     // Refresh button triggers manual update
-    if (refreshButton) { // If the refresh button exists
-        refreshButton.addEventListener("click", () => { // Add click event listener
+    if (refreshButton) {
+        refreshButton.addEventListener("click", () => {
             console.log("Manual auction refresh triggered!"); // Log refresh
             updateAuctionData(); // Update auction data
         });
     }
 
     // Export button saves auction data file
-    if (exportButton) { // If the export button exists
-        exportButton.addEventListener("click", () => { // Add click event listener
+    if (exportButton) {
+        exportButton.addEventListener("click", () => {
             console.log("Exporting auction data..."); // Log export
             exportAuctionData(); // Export auction data
         });
     }
 
     // Add Auction button redirects to a chosen website
-    if (addAuctionButton) { // If the add auction button exists
-        addAuctionButton.addEventListener("click", () => { // Add click event listener
-            window.location.href = "http://127.0.0.1:3000/past.html"; // Change this to the desired auction site
+    if (addAuctionButton) {
+        addAuctionButton.addEventListener("click", () => {
+            window.location.href = "http://127.0.0.1:3000/past.html"; // Redirect to add auction page
             console.log("Redirecting to add auction page..."); // Log redirect
         });
     }
 
-    // Automatic updates every 10 seconds
-    setInterval(updateAuctionData, 10000); // Set interval to update auction data every 10 seconds
+    setInterval(updateAuctionData, 10000); // Automatic updates every 10 seconds
 });
