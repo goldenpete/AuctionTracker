@@ -94,8 +94,15 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
             const auctions = data.split("---").filter((block) => block.trim() !== ""); // Split into auction blocks
 
             // --- Notification logic start ---
-            // Load user keywords from localStorage (now via window.getUserKeywords for consistency)
-            let userKeywords = (window.getUserKeywords ? window.getUserKeywords() : []);
+            // Load user keywords from localStorage
+            let userKeywords = [];
+            try {
+                userKeywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]')
+                    .map(k => k.trim().toLowerCase())
+                    .filter(k => k.length > 0);
+            } catch (e) {
+                userKeywords = [];
+            }
             // --- Notification logic end ---
 
             // Build HTML for each auction card
@@ -131,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                                 notifiedKeywords.add(keyword);
                             }
                         }
-                    }
+                    } // <-- THIS BRACE WAS MISSING OR MISPLACED
                     // --- End notification logic ---
 
                     // Find image and keyword match
@@ -178,31 +185,6 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         )
                         .join("<br>"); // Join lines for display
 
-                    // --- Deletable Chip for matched user keywords ---
-                    let chipsHtml = "";
-                    if (userKeywords.length > 0 && itemTitle) {
-                        const chips = userKeywords.filter(kw => itemTitle.includes(kw));
-                        if (chips.length > 0) {
-                            chipsHtml = `<div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0 0 0;">` +
-                                chips.map(kw => `
-                                    <span class="mdl-chip mdl-chip--deletable" style="background:#fff; color:#333;">
-                                        <span class="mdl-chip__text">${kw}</span>
-                                        <button type="button" class="mdl-chip__action" title="Remove keyword" onclick="(function(){
-                                            let keywords = JSON.parse(localStorage.getItem('auction_keywords')||'[]');
-                                            let idx = keywords.map(k=>k.toLowerCase()).indexOf('${kw.replace(/'/g, "\\'")}');
-                                            if(idx>-1){keywords.splice(idx,1);localStorage.setItem('auction_keywords',JSON.stringify(keywords));if(window.updateKeywordList)window.updateKeywordList();}
-                                            if(window.showSnackbar)window.showSnackbar('Keyword removed: ${kw}');
-                                            this.closest('.mdl-chip').remove();
-                                        }).call(this)">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
-                                    </span>
-                                `).join('') +
-                                `</div>`;
-                        }
-                    }
-                    // --- End Deletable Chip ---
-
                     // Return the HTML for this auction card
                     return `
                         <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};">
@@ -211,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                                 <div style="flex:1 0 auto;">
                                     ${imageTag}
                                 </div>
-                                ${chipsHtml}
                                 <div style="margin-top: 10px; text-align: center;">
                                     <div style="display: inline-block; vertical-align: top; text-align: center;">
                                         ${displayContent}
@@ -224,6 +205,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                 .join(""); // Join all auction cards
 
             // Reset notifiedKeywords if auctions have changed (optional: can be improved)
+            // This ensures notifications can be sent again if auctions are refreshed/changed
             notifiedKeywords = new Set();
 
             console.log("Auction data updated dynamically!"); // Log update
@@ -276,28 +258,4 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
     }
 
     setInterval(updateAuctionData, 10000); // Automatic updates every 10 seconds
-});
-
-// Handle OK button (Add Notification) from the dialog
-window.addEventListener('DOMContentLoaded', function() {
-    const dialogOkBtn = document.getElementById('dialog-ok');
-    if (dialogOkBtn) {
-        dialogOkBtn.addEventListener('click', function() {
-            const keywordInput = document.getElementById('keyword-input');
-            const keyword = keywordInput.value.trim();
-            if (keyword) {
-                let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
-                keywords.push(keyword);
-                localStorage.setItem('auction_keywords', JSON.stringify(keywords));
-                // Show snackbar for keyword added (if available)
-                if (window.showSnackbar) window.showSnackbar('Keyword added: ' + keyword);
-                // Clear and close dialog
-                keywordInput.value = '';
-                const addNotificationDialog = document.getElementById('add-notification-dialog');
-                if (addNotificationDialog) addNotificationDialog.close();
-                // Immediately update auction cards to show new chip
-                updateAuctionData();
-            }
-        });
-    }
 });
