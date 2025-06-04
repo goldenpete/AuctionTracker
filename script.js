@@ -81,10 +81,12 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
 
                     let itemTitle = ""; // Initialize item title
                     let matchedKeyword = null; // Initialize matched keyword
-                    for (const line of auctionLines) { // Loop through lines to find the first non-empty line
-                        const trimmedLine = line.trim(); // Trim whitespace from the line
+                    let titleIndex = -1; // Track the index of the title line
+                    for (let i = 0; i < auctionLines.length; i++) { // Loop through lines to find the first non-empty line
+                        const trimmedLine = auctionLines[i].trim(); // Trim whitespace from the line
                         if (trimmedLine !== "") { // If the line is not empty
                             itemTitle = trimmedLine.toLowerCase(); // Set item title to the lowercased line
+                            titleIndex = i; // Save the index of the title line
                             break; // Stop after finding the first non-empty line
                         }
                     }
@@ -108,13 +110,42 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank">${imageTag}</a>`; // Wrap image in anchor tag
                     }
 
-                    const displayContent = auctionLines.join("<br>"); // Join auction lines with line breaks for display
+                    // Extract and remove the title line for separate placement
+                    let titleHtml = "";
+                    if (titleIndex !== -1) {
+                        // Split the title into text and serial (assume serial is last word starting with #)
+                        const rawTitle = auctionLines[titleIndex].trim();
+                        const serialMatch = rawTitle.match(/(.*?)(\s+#\S+)$/);
+                        if (serialMatch) {
+                            // serialMatch[1]: title text, serialMatch[2]: serial (with #)
+                            titleHtml = `${serialMatch[1]} <b><span style="font-size:1.3em;">${serialMatch[2].trim()}</span></b><hr style="margin:6px 0;">`;
+                        } else {
+                            // fallback: no serial found, just use as normal
+                            titleHtml = `${rawTitle}<hr style="margin:6px 0;">`;
+                        }
+                        auctionLines.splice(titleIndex, 1); // Remove the title line from auctionLines
+                    }
+
+                    // Only make the info part (numbers/values) larger
+                    const infoRegex = /(:\s*)([\d\w\$\.,#\- ]+)/g;
+                    const displayContent = auctionLines
+                        .map(line =>
+                            line.replace(infoRegex, (match, p1, p2) => `${p1}<span style="font-size:1.2em;">${p2}</span>`)
+                        )
+                        .join("<br>");
 
                     return `
-    <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};"> <!-- Card container with background color -->
-        <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent;"> <!-- Card content area with transparent background -->
-            ${imageTag} <!-- Auction item image (possibly wrapped in a link) -->
-            ${displayContent} <!-- Auction item details -->
+    <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};">
+        <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent; display: flex; flex-direction: column; min-height: 220px;">
+            ${titleHtml}
+            <div style="flex:1 0 auto;">
+                ${imageTag}
+            </div>
+            <div style="margin-top: 10px; text-align: center;">
+                <div style="display: inline-block; vertical-align: top; text-align: center;">
+                    ${displayContent}
+                </div>
+            </div>
         </div>
     </div>
 `; // Return the HTML for this auction block
