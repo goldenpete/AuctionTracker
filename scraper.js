@@ -37,10 +37,10 @@ const fs = require("fs"); // Import the Node.js file system module
             fs.appendFileSync("past_auction_data.txt", auctionData + "\n---\n"); // Append to past data file
             fs.writeFileSync("auction_data.txt", auctionData); // Keep current data updated
         } else { // If no auction data was found
-            console.log("No auction data found. Retrying in 30 seconds..."); // Log retry message
+            console.log("No auction data found. Retrying in 1 minute..."); // Log retry message
         }
 
-        console.log("Next update in 5 minutes..."); // Log next update timing
-        await new Promise((resolve) => setTimeout(resolve, 5 * 60 * 1000)); // Wait 5 minutes before next fetch
+        console.log("Next update in 1 minutes..."); // Log next update timing
+        await new Promise((resolve) => setTimeout(resolve, 60 * 1000)); // Wait 1 minute before next fetch
     }
 })();
