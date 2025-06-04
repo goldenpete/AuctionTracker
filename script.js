@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     const infoRegex = /(:\s*)([\d\w\$\.,#\- ]+)/g; // Regex to match info after colon
                     const displayContent = auctionLines
                         .map(line =>
-                            line.replace(infoRegex, (match, p1, p2) => `${p1}<span style="font-size:1.2em;">${p2}</span>`)
+                            line.replace(infoRegex, (match, p1, p2) => `${p1}<span style="font-size:1.3em;">${p2}</span>`)
                         )
                         .join("<br>"); // Join lines for display
 
