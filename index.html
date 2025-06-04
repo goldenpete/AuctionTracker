@@ -104,6 +104,12 @@
             </div>
         </dialog>
 
+        <!-- MDL Snackbar -->
+        <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+
         <script>
         // Helper to get the Add Notification menu item
         function getAddNotificationMenuItem() {
@@ -125,11 +131,23 @@
             addNotificationDialog.close();
         });
 
-        // Handle OK button
+        // Snackbar helper
+        function showSnackbar(message) {
+            var snackbar = document.getElementById('snackbar');
+            if (snackbar && snackbar.MaterialSnackbar) {
+                snackbar.MaterialSnackbar.showSnackbar({message: message});
+            } else if (snackbar) {
+                // fallback for late upgrade
+                snackbar.querySelector('.mdl-snackbar__text').textContent = message;
+                snackbar.classList.add('mdl-snackbar--active');
+                setTimeout(() => snackbar.classList.remove('mdl-snackbar--active'), 2000);
+            }
+        }
+
+        // Handle OK button (Add Notification)
         document.getElementById('dialog-ok').addEventListener('click', function() {
             const keyword = document.getElementById('keyword-input').value.trim();
             if (keyword) {
-                // Save keyword (for demo, just use localStorage)
                 let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
                 keywords.push(keyword);
                 localStorage.setItem('auction_keywords', JSON.stringify(keywords));
@@ -143,6 +161,9 @@
                         body: `You'll be notified when "${keyword}" is available.`
                     });
                 }
+
+                // Show snackbar for keyword added
+                showSnackbar('Keyword added: ' + keyword);
 
                 // Clear and close dialog
                 document.getElementById('keyword-input').value = '';
@@ -171,6 +192,7 @@
             removeNotificationDialog.close();
         });
 
+        // Remove Notification Dialog: remove keyword
         function updateKeywordList() {
             const list = document.getElementById('keyword-list');
             let keywords = [];
@@ -205,9 +227,11 @@
 
                 iconBtn.appendChild(icon);
                 iconBtn.addEventListener('click', () => {
-                    keywords.splice(idx, 1);
+                    const removed = keywords.splice(idx, 1);
                     localStorage.setItem('auction_keywords', JSON.stringify(keywords));
                     updateKeywordList();
+                    // Show snackbar for keyword removed
+                    showSnackbar('Keyword removed: ' + removed[0]);
                 });
 
                 li.appendChild(span);
@@ -237,11 +261,9 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // Disable input and button while sending
             input.disabled = true;
             document.getElementById('feedback-submit').disabled = true;
 
-            // Send to Discord webhook
             fetch('https://discord.com/api/webhooks/1379940370061725759/wVmfbkCKG67FmYQR4a534WG4rC_7EeHJm3a2qSml-pJWf-Cel3D0dD_WMEOSQyvfFgqc', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -251,6 +273,8 @@
                 status.style.color = "green";
                 status.style.display = "block";
                 input.value = '';
+                // Show snackbar for feedback sent
+                showSnackbar('Feedback submitted!');
                 setTimeout(() => feedbackDialog.close(), 1200);
             }).catch(() => {
                 status.textContent = "Failed to send feedback.";
