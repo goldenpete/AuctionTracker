@@ -27,7 +27,7 @@ body {
 
 .mdl-card__title {
   background: linear-gradient(rgba(53, 50, 206, 1), rgba(53, 50, 206, 1)); /* Gradient background for card title */
-  color: white; /* White text color */
+  color: rgb(0, 0, 0); /* White text color */
   text-align: center; /* Center the title text */
   padding: 10px; /* Adds internal spacing */
 }
