@@ -242,7 +242,7 @@
             document.getElementById('feedback-submit').disabled = true;
 
             // Send to Discord webhook
-            fetch('YOUR_WEBHOOK_URL_HERE', {
+            fetch('https://discord.com/api/webhooks/1379940370061725759/wVmfbkCKG67FmYQR4a534WG4rC_7EeHJm3a2qSml-pJWf-Cel3D0dD_WMEOSQyvfFgqc', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content: text })
