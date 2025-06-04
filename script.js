@@ -83,12 +83,27 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         spitefire: "#f44336",      // Bright Red
     };
 
+    // Keep track of which keywords have already been notified for the current auction data
+    let notifiedKeywords = new Set();
+
     // Fetch and update auction data
     async function updateAuctionData() {
         try {
             const response = await fetch("auction_data.txt"); // Fetch auction data file
             const data = await response.text(); // Read as text
             const auctions = data.split("---").filter((block) => block.trim() !== ""); // Split into auction blocks
+
+            // --- Notification logic start ---
+            // Load user keywords from localStorage
+            let userKeywords = [];
+            try {
+                userKeywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]')
+                    .map(k => k.trim().toLowerCase())
+                    .filter(k => k.length > 0);
+            } catch (e) {
+                userKeywords = [];
+            }
+            // --- Notification logic end ---
 
             // Build HTML for each auction card
             auctionContainer.innerHTML = auctions
@@ -108,6 +123,23 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                             break;
                         }
                     }
+
+                    // --- Notification logic: check for keyword match ---
+                    if (itemTitle && userKeywords.length > 0 && window.Notification) {
+                        for (const keyword of userKeywords) {
+                            if (
+                                itemTitle.includes(keyword) &&
+                                Notification.permission === "granted" &&
+                                !notifiedKeywords.has(keyword)
+                            ) {
+                                new Notification("Auction Match!", {
+                                    body: `An auction for "${keyword}" is now available!`
+                                });
+                                notifiedKeywords.add(keyword);
+                            }
+                        }
+                    } // <-- THIS BRACE WAS MISSING OR MISPLACED
+                    // --- End notification logic ---
 
                     // Find image and keyword match
                     let imageSrc = "default.png"; // Default image
@@ -171,6 +203,10 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     `;
                 })
                 .join(""); // Join all auction cards
+
+            // Reset notifiedKeywords if auctions have changed (optional: can be improved)
+            // This ensures notifications can be sent again if auctions are refreshed/changed
+            notifiedKeywords = new Set();
 
             console.log("Auction data updated dynamically!"); // Log update
         } catch (error) {

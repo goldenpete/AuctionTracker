@@ -55,5 +55,150 @@
                 <!-- Button to redirect to past auctions -->
             </div>
         </div>
+
+        <!-- Add Notification Dialog -->
+        <dialog class="mdl-dialog" id="add-notification-dialog">
+            <h4 class="mdl-dialog__title">Add Notification</h4>
+            <div class="mdl-dialog__content">
+                <form id="notification-form">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="keyword-input" required>
+                        <label class="mdl-textfield__label" for="keyword-input">Keyword...</label>
+                    </div>
+                </form>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button type="button" class="mdl-button" id="dialog-ok">OK</button>
+                <button type="button" class="mdl-button close">Cancel</button>
+            </div>
+        </dialog>
+
+        <!-- Remove Notification Dialog -->
+        <dialog class="mdl-dialog" id="remove-notification-dialog">
+            <h4 class="mdl-dialog__title">Remove Notification</h4>
+            <div class="mdl-dialog__content">
+                <ul id="keyword-list" class="mdl-list" style="min-width:200px;">
+                    <!-- Keywords will be dynamically inserted here -->
+                </ul>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button type="button" class="mdl-button close-remove">Close</button>
+            </div>
+        </dialog>
+
+        <script>
+        // Helper to get the Add Notification menu item
+        function getAddNotificationMenuItem() {
+            const menu = document.querySelectorAll('.mdl-menu__item');
+            return Array.from(menu).find(item => item.textContent.trim() === 'Add Notification');
+        }
+
+        // Show dialog on menu click
+        const addNotificationDialog = document.getElementById('add-notification-dialog');
+        if (!addNotificationDialog.showModal) {
+            dialogPolyfill.registerDialog(addNotificationDialog);
+        }
+        getAddNotificationMenuItem().addEventListener('click', () => {
+            addNotificationDialog.showModal();
+        });
+
+        // Dialog close
+        addNotificationDialog.querySelector('.close').addEventListener('click', function() {
+            addNotificationDialog.close();
+        });
+
+        // Handle OK button
+        document.getElementById('dialog-ok').addEventListener('click', function() {
+            const keyword = document.getElementById('keyword-input').value.trim();
+            if (keyword) {
+                // Save keyword (for demo, just use localStorage)
+                let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+                keywords.push(keyword);
+                localStorage.setItem('auction_keywords', JSON.stringify(keywords));
+
+                // Request notification permission and show a test notification
+                if (window.Notification && Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                }
+                if (window.Notification && Notification.permission === "granted") {
+                    new Notification("Notification set!", {
+                        body: `You'll be notified when "${keyword}" is available.`
+                    });
+                }
+
+                // Clear and close dialog
+                document.getElementById('keyword-input').value = '';
+                addNotificationDialog.close();
+            }
+        });
+
+        // Helper to get menu items
+        function getMenuItemByText(text) {
+            const menu = document.querySelectorAll('.mdl-menu__item');
+            return Array.from(menu).find(item => item.textContent.trim() === text);
+        }
+
+        // --- Remove Notification Dialog Logic ---
+        const removeNotificationDialog = document.getElementById('remove-notification-dialog');
+        if (typeof dialogPolyfill !== "undefined" && removeNotificationDialog && !removeNotificationDialog.showModal) {
+            dialogPolyfill.registerDialog(removeNotificationDialog);
+        }
+
+        getMenuItemByText('Remove Notification').addEventListener('click', () => {
+            updateKeywordList();
+            removeNotificationDialog.showModal();
+        });
+
+        removeNotificationDialog.querySelector('.close-remove').addEventListener('click', function() {
+            removeNotificationDialog.close();
+        });
+
+        function updateKeywordList() {
+            const list = document.getElementById('keyword-list');
+            let keywords = [];
+            try {
+                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+            } catch (e) {
+                keywords = [];
+            }
+            list.innerHTML = '';
+            if (keywords.length === 0) {
+                list.innerHTML = '<li class="mdl-list__item">No keywords added.</li>';
+                return;
+            }
+            keywords.forEach((keyword, idx) => {
+                const li = document.createElement('li');
+                li.className = 'mdl-list__item';
+                li.style.display = 'flex';
+                li.style.alignItems = 'center';
+
+                const span = document.createElement('span');
+                span.className = 'mdl-list__item-primary-content';
+                span.textContent = keyword;
+
+                const iconBtn = document.createElement('button');
+                iconBtn.className = 'mdl-button mdl-js-button mdl-button--icon';
+                iconBtn.style.marginLeft = 'auto';
+                iconBtn.title = 'Remove';
+
+                const icon = document.createElement('i');
+                icon.className = 'material-icons';
+                icon.textContent = 'close';
+
+                iconBtn.appendChild(icon);
+                iconBtn.addEventListener('click', () => {
+                    keywords.splice(idx, 1);
+                    localStorage.setItem('auction_keywords', JSON.stringify(keywords));
+                    updateKeywordList();
+                });
+
+                li.appendChild(span);
+                li.appendChild(iconBtn);
+                list.appendChild(li);
+            });
+        }
+
+        // Optionally, check for keywords in your auction logic and notify user when found
+        </script>
     </body>
 </html>
