@@ -24,6 +24,27 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         spitefire: "inventory/spitefire.webp",
     };
 
+    // Map of keywords to links (customize as needed)
+    const linkMap = {
+        accordion: "https://thewild-west.fandom.com/wiki/Accordion",
+        drum: "https://thewild-west.fandom.com/wiki/Drum",
+        fiddle: "https://thewild-west.fandom.com/wiki/Fiddle",
+        flute: "https://thewild-west.fandom.com/wiki/Flute",
+        guitar: "https://thewild-west.fandom.com/wiki/Guitar",
+        harmonica: "https://thewild-west.fandom.com/wiki/Harmonica",
+        trumpet: "https://thewild-west.fandom.com/wiki/Trumpet",
+        ticket: "https://thewild-west.fandom.com/wiki/Trade_Ticket",
+        axegonne: "https://thewild-west.fandom.com/wiki/Admiral%27s_Axegonne",
+        "guycot carbine": "https://thewild-west.fandom.com/wiki/Guycot_Chain_Carbine",
+        "guycot pistol": "https://thewild-west.fandom.com/wiki/Guycot_Chain_Pistol",
+        jezail: "https://thewild-west.fandom.com/wiki/Jezail_Musket",
+        kukri: "https://thewild-west.fandom.com/wiki/Kukri_Machete",
+        lancaster: "https://thewild-west.fandom.com/wiki/Lancaster_Pistol",
+        paterson: "https://thewild-west.fandom.com/wiki/Paterson_Navy",
+        prototype: "https://thewild-west.fandom.com/wiki/Schwarzlose_Prototype_Pistol",
+        spitefire: "https://thewild-west.fandom.com/wiki/Spitfire_Revolving_Sniper",
+    };
+
     const sortedKeywords = Object.keys(imageMap).sort((a, b) => b.length - a.length); // Sort keywords by length (longest first) for matching
 
     async function updateAuctionData() { // Function to fetch and update auction data
@@ -37,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     const auctionLines = auction.split("\n"); // Split auction block into lines
 
                     let itemTitle = ""; // Initialize item title
+                    let matchedKeyword = null;
                     for (const line of auctionLines) { // Loop through lines to find the first non-empty line
                         const trimmedLine = line.trim(); // Trim whitespace from the line
                         if (trimmedLine !== "") { // If the line is not empty
@@ -51,9 +73,16 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         for (const keyword of sortedKeywords) { // Loop through sorted keywords
                             if (itemTitle.includes(keyword)) { // If the item title contains the keyword
                                 imageSrc = imageMap[keyword]; // Set the image source to the mapped image
+                                matchedKeyword = keyword;
                                 break; // Stop after the first match
                             }
                         }
+                    }
+
+                    let imageTag = `<img src="${imageSrc}" alt="${itemTitle || "Auction Item"}" style="max-width: 100px; float: right; padding: 5px;">`;
+                    // If a link exists for this keyword, wrap the image in an anchor
+                    if (matchedKeyword && linkMap[matchedKeyword]) {
+                        imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank">${imageTag}</a>`;
                     }
 
                     const displayContent = auctionLines.join("<br>"); // Join auction lines with line breaks for display
@@ -61,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     return `
                     <div class="mdl-card mdl-shadow--2dp">
                         <div class.mdl-card__title mdl-card--expand page-content">
-                            <img src="${imageSrc}" alt="${itemTitle || "Auction Item"}" style="max-width: 100px; float: right; padding: 5px;">
+                            ${imageTag}
                             ${displayContent}
                         </div>
                     </div>
