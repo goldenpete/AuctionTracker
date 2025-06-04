@@ -3,7 +3,7 @@
 
 body {
   background-color: rgb(141, 70, 255); /* Set the background color of the page */
-  font-family: 'Roboto', sans-serif; /* Apply Roboto as the default font */
+  font-family: 'Ubuntu', sans-serif; /* Apply Ubuntu as the default font */
   font-weight: 500; /* Slightly thicker than default */
 }
 
@@ -38,7 +38,7 @@ body {
   line-height: 1.6; /* Improves readability */
   font-size: 1.1rem; /* Slightly larger text */
   text-align: left; /* Aligns content for better readability */
-  font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+  font-family: 'Ubuntu', sans-serif; /* Apply Ubuntu font */
   font-weight: 500; /* Make the text thicker */
 }
 
