@@ -34,7 +34,8 @@ const fs = require("fs"); // Import the Node.js file system module
         if (auctionData) { // If auction data was found
             console.log("Auction Data Found:"); // Log that data was found
             console.log(auctionData); // Print the auction data to the console
-            fs.writeFileSync("auction_data.txt", auctionData); // Write the auction data to a file
+            fs.appendFileSync("past_auction_data.txt", auctionData + "\n---\n"); // Append to past data file
+            fs.writeFileSync("auction_data.txt", auctionData); // Keep current data updated
         } else { // If no auction data was found
             console.log("No auction data found. Retrying in 30 seconds..."); // Log retry message
         }

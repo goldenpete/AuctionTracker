@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Past Auctions</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const response = await fetch("past_auction_data.txt");
+            const data = await response.text();
+            document.getElementById("past-auctions").innerHTML = data.split("---").map(block => `<div>${block}</div>`).join("<hr>");
+        });
+    </script>
+</head>
+<body>
+    <h1>Past Auction Records</h1>
+    <div id="past-auctions">Loading...</div>
+</body>
+</html>

@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
     // Add Auction button redirects to a chosen website
     if (addAuctionButton) { // If the add auction button exists
         addAuctionButton.addEventListener("click", () => { // Add click event listener
-            window.location.href = "https://yourwebsite.com"; // Change this to the desired auction site
+            window.location.href = "http://127.0.0.1:3000/past.html"; // Change this to the desired auction site
             console.log("Redirecting to add auction page..."); // Log redirect
         });
     }
