@@ -38,6 +38,12 @@
                     </span>
                     <!-- Icons in the top right -->
                     <span style="display:flex;align-items:center;">
+                        <!-- Language Icon Button (left of Past Auctions) -->
+                        <button id="language-icon"
+                                class="mdl-button mdl-js-button mdl-button--icon"
+                                title="Language">
+                            <i class="material-icons">language</i>
+                        </button>
                         <!-- Past Auctions Icon Button -->
                         <button id="past-auction-icon"
                                 class="mdl-button mdl-js-button mdl-button--icon"
@@ -517,6 +523,47 @@
         document.getElementById('play-btn').addEventListener('click', function() {
             window.open('https://www.roblox.com/games/2317712696/The-Wild-West-4-0', '_blank');
             if (typeof showSnackbar === 'function') showSnackbar("Game page opened!");
+        });
+
+        // Google Translate widget loader
+        function loadGoogleTranslate() {
+            if (document.getElementById('google-translate-script')) return;
+            var gt = document.createElement('script');
+            gt.id = 'google-translate-script';
+            gt.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.body.appendChild(gt);
+        }
+
+        // Google Translate widget init
+        window.googleTranslateElementInit = function() {
+            if (!document.getElementById('google_translate_element')) {
+                var div = document.createElement('div');
+                div.id = 'google_translate_element';
+                div.style.position = 'fixed';
+                div.style.top = '60px';
+                div.style.right = '24px';
+                div.style.zIndex = '2000';
+                div.style.background = 'rgba(255,255,255,0.95)';
+                div.style.borderRadius = '8px';
+                div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+                div.style.padding = '6px 12px 6px 6px';
+                document.body.appendChild(div);
+            }
+            new window.google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: '', // empty means all languages
+                layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        };
+
+        // Language button click handler
+        document.getElementById('language-icon').addEventListener('click', function() {
+            loadGoogleTranslate();
+            // Show/hide the widget on repeated clicks
+            var el = document.getElementById('google_translate_element');
+            if (el) {
+                el.style.display = (el.style.display === 'none' ? 'block' : 'none');
+            }
         });
         </script>
     </body>
