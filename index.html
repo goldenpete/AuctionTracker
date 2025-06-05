@@ -18,12 +18,20 @@
             <header class="mdl-layout__header">
                 <div class="mdl-layout__header-row" style="padding-left:0;padding-right:0;display:flex;align-items:center;justify-content:space-between;">
                     <!-- Refresh Icon Button in the top left -->
-                    <button id="refresh-button"
-                            class="mdl-button mdl-js-button mdl-button--icon"
-                            title="Refresh Auctions"
-                            style="margin-left:0;">
-                        <i class="material-icons">refresh</i>
-                    </button>
+                    <span style="display:flex;align-items:center;gap:8px;">
+                        <button id="refresh-button"
+                                class="mdl-button mdl-js-button mdl-button--icon"
+                                title="Refresh Auctions"
+                                style="margin-left:0;">
+                            <i class="material-icons">refresh</i>
+                        </button>
+                        <!-- Play Button -->
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                                id="play-btn"
+                                style="margin-left:8px;">
+                            Play
+                        </button>
+                    </span>
                     <!-- Title centered -->
                     <span class="mdl-layout-title" style="flex:1;text-align:center;margin:0;font-size:1.25rem;">
                         Auction House Status
@@ -505,6 +513,11 @@
         })();
 
         // --- Optionally, check for keywords in your auction logic and notify user when found ---
+        // Play button logic
+        document.getElementById('play-btn').addEventListener('click', function() {
+            window.open('https://www.roblox.com/games/2317712696/The-Wild-West-4-0', '_blank');
+            if (typeof showSnackbar === 'function') showSnackbar("Game page opened!");
+        });
         </script>
     </body>
 </html>
