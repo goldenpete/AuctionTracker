@@ -1,570 +1,518 @@
 <!DOCTYPE html> <!-- Declare the document type as HTML5 -->
 <html lang="en-ca"> <!-- Set the language of the document to Canadian English -->
-    <head>
-        <meta charset="utf-8" /> <!-- Set character encoding to UTF-8 -->
-        <meta name="description" content="Auction House Status" /> <!-- Page description for SEO -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsive design for mobile devices -->
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-purple.min.css" /> <!-- Import Material Design Lite CSS -->
-        <link rel="stylesheet" href="./style.css" /> <!-- Import custom styles -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- Import Material Icons font -->
-        <title>Auction House Status</title> <!-- Set the page title -->
-    </head>
+<head>
+    <meta charset="utf-8" /> <!-- Set character encoding to UTF-8 -->
+    <meta name="description" content="Auction House Status" /> <!-- Page description for SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Responsive design for mobile devices -->
+    <title>Auction House Status</title> <!-- Set the page title -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-purple.min.css" /> <!-- Import Material Design Lite CSS -->
+    <link rel="stylesheet" href="./style.css" /> <!-- Import custom styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- Import Material Icons font -->
+</head>
+<body>
+    <!-- Load Material Design Lite JS (deferred) -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <!-- Load custom JavaScript -->
+    <script src="./script.js"></script>
 
-    <body>
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- Load Material Design Lite JS (deferred) -->
-        <script src="./script.js"></script> <!-- Load custom JavaScript -->
-
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <header class="mdl-layout__header">
-                <div class="mdl-layout__header-row" style="padding-left:0;padding-right:0;display:flex;align-items:center;justify-content:space-between;">
-                    <!-- Refresh Icon Button in the top left -->
-                    <span style="display:flex;align-items:center;gap:8px;">
-                        <button id="refresh-button"
-                                class="mdl-button mdl-js-button mdl-button--icon"
-                                title="Refresh Auctions"
-                                style="margin-left:0;">
-                            <i class="material-icons">refresh</i>
-                        </button>
-                        <!-- Play Button -->
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                                id="play-btn"
-                                style="margin-left:8px;">
-                            Play
-                        </button>
-                    </span>
-                    <!-- Title centered -->
-                    <span class="mdl-layout-title" style="flex:1;text-align:center;margin:0;font-size:1.25rem;">
-                        Auction House Status
-                    </span>
-                    <!-- Icons in the top right -->
-                    <span style="display:flex;align-items:center;">
-                        <!-- Language Icon Button (left of Past Auctions) -->
-                        <button id="language-icon"
-                                class="mdl-button mdl-js-button mdl-button--icon"
-                                title="Language">
-                            <i class="material-icons">language</i>
-                        </button>
-                        <!-- Past Auctions Icon Button -->
-                        <button id="past-auction-icon"
-                                class="mdl-button mdl-js-button mdl-button--icon"
-                                title="Past Auctions">
-                            <i class="material-icons">history</i>
-                        </button>
-                        <!-- Bell Icon Button with its own menu -->
-                        <button id="notification-bell-icon"
-                                class="mdl-button mdl-js-button mdl-button--icon"
-                                title="Notifications"
-                                style="background-color:transparent;transition:background 0.2s;">
-                            <i class="material-icons">notifications</i>
-                        </button>
-                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                            for="notification-bell-icon">
-                            <li class="mdl-menu__item">Add Notification</li>
-                            <li class="mdl-menu__item">Remove Notification</li>
-                        </ul>
-                        <!-- Help Icon Button (was 3-dot menu) -->
-                        <button id="demo-menu-lower-right"
-                                class="mdl-button mdl-js-button mdl-button--icon"
-                                title="Help / Menu">
-                            <i class="material-icons">help_outline</i>
-                        </button>
-                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                            for="demo-menu-lower-right">
-                            <li class="mdl-menu__item">Feedback</li>
-                            <li class="mdl-menu__item">Discord</li>
-                        </ul>
-                    </span>
-                </div>
-            </header>
-
-            <div id="auction-container">
-                <!-- Auctions will be dynamically added here -->
+    <!-- Main layout container using MDL layout classes -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <!-- Header section with navigation and action buttons -->
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row" style="padding-left:0;padding-right:0;display:flex;align-items:center;justify-content:space-between;">
+                <!-- Left-aligned buttons: Refresh and Play -->
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <!-- Refresh Icon Button -->
+                    <button id="refresh-button"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Refresh Auctions"
+                            style="margin-left:0;">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                    <!-- Play Button to open Roblox game -->
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                            id="play-btn"
+                            style="margin-left:8px;">
+                        Play
+                    </button>
+                </span>
+                <!-- Centered page title -->
+                <span class="mdl-layout-title" style="flex:1;text-align:center;margin:0;font-size:1.25rem;">
+                    Auction House Status
+                </span>
+                <!-- Right-aligned icon buttons: Language, Past Auctions, Notifications, Help -->
+                <span style="display:flex;align-items:center;">
+                    <!-- Language Icon Button -->
+                    <button id="language-icon"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Language">
+                        <i class="material-icons">language</i>
+                    </button>
+                    <!-- Past Auctions Icon Button -->
+                    <button id="past-auction-icon"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Past Auctions">
+                        <i class="material-icons">history</i>
+                    </button>
+                    <!-- Notification Bell Icon Button with menu -->
+                    <button id="notification-bell-icon"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Notifications"
+                            style="background-color:transparent;transition:background 0.2s;">
+                        <i class="material-icons">notifications</i>
+                    </button>
+                    <!-- Notification menu for bell icon -->
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                        for="notification-bell-icon">
+                        <li class="mdl-menu__item">Add Notification</li>
+                        <li class="mdl-menu__item">Remove Notification</li>
+                    </ul>
+                    <!-- Help Icon Button with menu -->
+                    <button id="demo-menu-lower-right"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Help / Menu">
+                        <i class="material-icons">help_outline</i>
+                    </button>
+                    <!-- Help menu for help icon -->
+                    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                        for="demo-menu-lower-right">
+                        <li class="mdl-menu__item">Feedback</li>
+                        <li class="mdl-menu__item">Discord</li>
+                    </ul>
+                </span>
             </div>
+        </header>
 
-            <div id="action-buttons" style="text-align: center; margin-top: 24px;">
-                <!--
-                <button id="refresh-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    Refresh Auctions
-                </button>
-                -->
-                <!-- Button to manually refresh auction data -->
+        <!-- Container for dynamically added auction cards -->
+        <div id="auction-container">
+            <!-- Auctions will be dynamically added here -->
+        </div>
 
-                <!--
-                <button id="export-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
-                    Export Data
-                </button>
-                -->
-                <!-- Button to export auction data -->
-
-                <!--
-                <button id="add-auction-button" class="mdl-button mdl-js-button mdl-button--raised">
-                    Past Auctions
-                </button>
-                -->
-                <!-- Button to redirect to past auctions -->
-            </div>
-
-            <!-- Fixed Export FAB in bottom right corner -->
-            <button id="export-fab"
-                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--accent"
-                style="position:fixed;bottom:24px;right:24px;z-index:1000;">
-                <i class="material-icons">download</i>
+        <!-- Action buttons section (currently commented out) -->
+        <div id="action-buttons" style="text-align: center; margin-top: 24px;">
+            <!--
+            <button id="refresh-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                Refresh Auctions
             </button>
+            -->
+            <!-- Button to manually refresh auction data -->
+
+            <!--
+            <button id="export-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
+                Export Data
+            </button>
+            -->
+            <!-- Button to export auction data -->
+
+            <!--
+            <button id="add-auction-button" class="mdl-button mdl-js-button mdl-button--raised">
+                Past Auctions
+            </button>
+            -->
+            <!-- Button to redirect to past auctions -->
         </div>
 
-        <!-- Add Notification Dialog -->
-        <dialog class="mdl-dialog" id="add-notification-dialog">
-            <h4 class="mdl-dialog__title">Add Notification</h4>
-            <div class="mdl-dialog__content">
-                <form id="notification-form">
-                    <div class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" type="text" id="keyword-input" required>
-                        <label class="mdl-textfield__label" for="keyword-input">Keyword...</label>
-                    </div>
-                </form>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button type="button" class="mdl-button" id="dialog-ok">OK</button>
-                <button type="button" class="mdl-button close">Cancel</button>
-            </div>
-        </dialog>
+        <!-- Fixed Export Floating Action Button (FAB) in bottom right corner -->
+        <button id="export-fab"
+            class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--accent"
+            style="position:fixed;bottom:24px;right:24px;z-index:1000;">
+            <i class="material-icons">download</i>
+        </button>
+    </div>
 
-        <!-- Remove Notification Dialog -->
-        <dialog class="mdl-dialog" id="remove-notification-dialog">
-            <h4 class="mdl-dialog__title">Remove Notification</h4>
-            <div class="mdl-dialog__content">
-                <ul id="keyword-list" class="mdl-list" style="min-width:200px;">
-                    <!-- Keywords will be dynamically inserted here -->
-                </ul>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button type="button" class="mdl-button close-remove">Close</button>
-            </div>
-        </dialog>
-
-        <!-- Feedback Dialog -->
-        <dialog class="mdl-dialog" id="feedback-dialog">
-            <h4 class="mdl-dialog__title">Feedback</h4>
-            <div class="mdl-dialog__content">
-                <form id="feedback-form">
-                    <div class="mdl-textfield mdl-js-textfield" style="width:100%;">
-                        <textarea class="mdl-textfield__input" type="text" rows="4" id="feedback-input" required style="resize:vertical;"></textarea>
-                        <label class="mdl-textfield__label" for="feedback-input">Enter your feedback...</label>
-                    </div>
-                </form>
-                <div id="feedback-status" style="color:green;display:none;margin-top:8px;"></div>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button type="button" class="mdl-button" id="feedback-submit">Submit</button>
-                <button type="button" class="mdl-button close-feedback">Cancel</button>
-            </div>
-        </dialog>
-
-        <!-- MDL Snackbar -->
-        <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
+    <!-- Dialog for adding a notification keyword -->
+    <dialog class="mdl-dialog" id="add-notification-dialog">
+        <h4 class="mdl-dialog__title">Add Notification</h4>
+        <div class="mdl-dialog__content">
+            <form id="notification-form">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="keyword-input" required>
+                    <label class="mdl-textfield__label" for="keyword-input">Keyword...</label>
+                </div>
+            </form>
         </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button" id="dialog-ok">OK</button>
+            <button type="button" class="mdl-button close">Cancel</button>
+        </div>
+    </dialog>
 
-        <script>
-        // Helper to get the Add Notification menu item
-        function getAddNotificationMenuItem() {
-            const menu = document.querySelectorAll('.mdl-menu__item');
-            return Array.from(menu).find(item => item.textContent.trim() === 'Add Notification');
+    <!-- Dialog for removing a notification keyword -->
+    <dialog class="mdl-dialog" id="remove-notification-dialog">
+        <h4 class="mdl-dialog__title">Remove Notification</h4>
+        <div class="mdl-dialog__content">
+            <ul id="keyword-list" class="mdl-list" style="min-width:200px;">
+                <!-- Keywords will be dynamically inserted here -->
+            </ul>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button close-remove">Close</button>
+        </div>
+    </dialog>
+
+    <!-- Dialog for submitting feedback -->
+    <dialog class="mdl-dialog" id="feedback-dialog">
+        <h4 class="mdl-dialog__title">Feedback</h4>
+        <div class="mdl-dialog__content">
+            <form id="feedback-form">
+                <div class="mdl-textfield mdl-js-textfield" style="width:100%;">
+                    <textarea class="mdl-textfield__input" type="text" rows="4" id="feedback-input" required style="resize:vertical;"></textarea>
+                    <label class="mdl-textfield__label" for="feedback-input">Enter your feedback...</label>
+                </div>
+            </form>
+            <div id="feedback-status" style="color:green;display:none;margin-top:8px;"></div>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button" id="feedback-submit">Submit</button>
+            <button type="button" class="mdl-button close-feedback">Cancel</button>
+        </div>
+    </dialog>
+
+    <!-- Snackbar for showing brief messages to the user -->
+    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+
+    <!-- Main script block for all UI logic and event handlers -->
+    <script>
+    // Helper function to get the Add Notification menu item
+    function getAddNotificationMenuItem() {
+        const menu = document.querySelectorAll('.mdl-menu__item');
+        return Array.from(menu).find(item => item.textContent.trim() === 'Add Notification');
+    }
+
+    // Helper function to get menu items by text and parent menu
+    function getMenuItemByTextAndMenu(text, menuId) {
+        const menu = document.querySelectorAll(`#${menuId} ~ ul.mdl-menu .mdl-menu__item`);
+        return Array.from(menu).find(item => item.textContent.trim() === text);
+    }
+
+    // Show dialog on bell menu click for Add Notification
+    const addNotificationDialog = document.getElementById('add-notification-dialog');
+    if (!addNotificationDialog.showModal) {
+        dialogPolyfill.registerDialog(addNotificationDialog); // Register polyfill if needed
+    }
+    getMenuItemByTextAndMenu('Add Notification', 'notification-bell-icon').addEventListener('click', () => {
+        addNotificationDialog.showModal(); // Show Add Notification dialog
+    });
+
+    // Close Add Notification dialog on Cancel
+    addNotificationDialog.querySelector('.close').addEventListener('click', function() {
+        addNotificationDialog.close();
+    });
+
+    // Snackbar helper to show messages
+    function showSnackbar(message) {
+        var snackbar = document.getElementById('snackbar');
+        if (snackbar && snackbar.MaterialSnackbar) {
+            snackbar.MaterialSnackbar.showSnackbar({message: message});
+        } else if (snackbar) {
+            snackbar.querySelector('.mdl-snackbar__text').textContent = message;
+            snackbar.classList.add('mdl-snackbar--active');
+            setTimeout(() => snackbar.classList.remove('mdl-snackbar--active'), 2000);
         }
+    }
 
-        // Helper to get menu items by text and parent menu
-        function getMenuItemByTextAndMenu(text, menuId) {
-            const menu = document.querySelectorAll(`#${menuId} ~ ul.mdl-menu .mdl-menu__item`);
-            return Array.from(menu).find(item => item.textContent.trim() === text);
-        }
+    // Handle OK button in Add Notification dialog
+    document.getElementById('dialog-ok').addEventListener('click', function() {
+        const keyword = document.getElementById('keyword-input').value.trim();
+        if (keyword) {
+            let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+            keywords.push(keyword);
+            localStorage.setItem('auction_keywords', JSON.stringify(keywords));
 
-        // Show dialog on bell menu click
-        const addNotificationDialog = document.getElementById('add-notification-dialog');
-        if (!addNotificationDialog.showModal) {
-            dialogPolyfill.registerDialog(addNotificationDialog);
-        }
-        // Add Notification from bell menu
-        getMenuItemByTextAndMenu('Add Notification', 'notification-bell-icon').addEventListener('click', () => {
-            addNotificationDialog.showModal();
-        });
-
-        // Dialog close
-        addNotificationDialog.querySelector('.close').addEventListener('click', function() {
-            addNotificationDialog.close();
-        });
-
-        // Snackbar helper
-        function showSnackbar(message) {
-            var snackbar = document.getElementById('snackbar');
-            if (snackbar && snackbar.MaterialSnackbar) {
-                snackbar.MaterialSnackbar.showSnackbar({message: message});
-            } else if (snackbar) {
-                // fallback for late upgrade
-                snackbar.querySelector('.mdl-snackbar__text').textContent = message;
-                snackbar.classList.add('mdl-snackbar--active');
-                setTimeout(() => snackbar.classList.remove('mdl-snackbar--active'), 2000);
+            // Request notification permission and show a test notification
+            if (window.Notification && Notification.permission !== "granted") {
+                Notification.requestPermission();
             }
-        }
+            if (window.Notification && Notification.permission === "granted") {
+                new Notification("Notification set!", {
+                    body: `You'll be notified when "${keyword}" is available.`
+                });
+            }
 
-        // Handle OK button (Add Notification)
-        document.getElementById('dialog-ok').addEventListener('click', function() {
-            const keyword = document.getElementById('keyword-input').value.trim();
-            if (keyword) {
-                let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
-                keywords.push(keyword);
+            showSnackbar('Keyword added: ' + keyword); // Show snackbar
+
+            document.getElementById('keyword-input').value = ''; // Clear input
+            addNotificationDialog.close(); // Close dialog
+        }
+    });
+
+    // Remove Notification dialog logic
+    const removeNotificationDialog = document.getElementById('remove-notification-dialog');
+    if (typeof dialogPolyfill !== "undefined" && removeNotificationDialog && !removeNotificationDialog.showModal) {
+        dialogPolyfill.registerDialog(removeNotificationDialog); // Register polyfill if needed
+    }
+    getMenuItemByTextAndMenu('Remove Notification', 'notification-bell-icon').addEventListener('click', () => {
+        updateKeywordList(); // Update keyword list before showing dialog
+        removeNotificationDialog.showModal();
+    });
+
+    // Close Remove Notification dialog
+    removeNotificationDialog.querySelector('.close-remove').addEventListener('click', function() {
+        removeNotificationDialog.close();
+    });
+
+    // Update the keyword list in Remove Notification dialog
+    function updateKeywordList() {
+        const list = document.getElementById('keyword-list');
+        let keywords = [];
+        try {
+            keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+        } catch (e) {
+            keywords = [];
+        }
+        list.innerHTML = '';
+        if (keywords.length === 0) {
+            list.innerHTML = '<li class="mdl-list__item">No keywords added.</li>';
+            return;
+        }
+        keywords.forEach((keyword, idx) => {
+            const li = document.createElement('li');
+            li.className = 'mdl-list__item';
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+
+            const span = document.createElement('span');
+            span.className = 'mdl-list__item-primary-content';
+            span.textContent = keyword;
+
+            const iconBtn = document.createElement('button');
+            iconBtn.className = 'mdl-button mdl-js-button mdl-button--icon';
+            iconBtn.style.marginLeft = 'auto';
+            iconBtn.title = 'Remove';
+
+            const icon = document.createElement('i');
+            icon.className = 'material-icons';
+            icon.textContent = 'close';
+
+            iconBtn.appendChild(icon);
+            iconBtn.addEventListener('click', () => {
+                const removed = keywords.splice(idx, 1);
                 localStorage.setItem('auction_keywords', JSON.stringify(keywords));
+                updateKeywordList();
+                showSnackbar('Keyword removed: ' + removed[0]);
+            });
 
-                // Request notification permission and show a test notification
-                if (window.Notification && Notification.permission !== "granted") {
-                    Notification.requestPermission();
-                }
-                if (window.Notification && Notification.permission === "granted") {
-                    new Notification("Notification set!", {
-                        body: `You'll be notified when "${keyword}" is available.`
-                    });
-                }
-
-                // Show snackbar for keyword added
-                showSnackbar('Keyword added: ' + keyword);
-
-                // Clear and close dialog
-                document.getElementById('keyword-input').value = '';
-                addNotificationDialog.close();
-            }
+            li.appendChild(span);
+            li.appendChild(iconBtn);
+            list.appendChild(li);
         });
+        updateBellHighlight(); // Update bell icon highlight after changes
+    }
 
-        // Remove Notification from bell menu
-        const removeNotificationDialog = document.getElementById('remove-notification-dialog');
-        if (typeof dialogPolyfill !== "undefined" && removeNotificationDialog && !removeNotificationDialog.showModal) {
-            dialogPolyfill.registerDialog(removeNotificationDialog);
+    // Feedback dialog logic
+    const feedbackDialog = document.getElementById('feedback-dialog');
+    if (typeof dialogPolyfill !== "undefined" && feedbackDialog && !feedbackDialog.showModal) {
+        dialogPolyfill.registerDialog(feedbackDialog); // Register polyfill if needed
+    }
+
+    // Helper to get Help menu items by text
+    function getHelpMenuItemByText(text) {
+        const menu = document.querySelectorAll('#demo-menu-lower-right ~ ul.mdl-menu .mdl-menu__item');
+        return Array.from(menu).find(item => item.textContent.trim() === text);
+    }
+
+    // Show Feedback dialog from Help menu
+    getHelpMenuItemByText('Feedback').addEventListener('click', () => {
+        document.getElementById('feedback-input').value = '';
+        document.getElementById('feedback-status').style.display = 'none';
+        feedbackDialog.showModal();
+    });
+
+    // Close Feedback dialog
+    feedbackDialog.querySelector('.close-feedback').addEventListener('click', function() {
+        feedbackDialog.close();
+    });
+
+    // Submit feedback to Discord webhook
+    function submitFeedback() {
+        const input = document.getElementById('feedback-input');
+        const status = document.getElementById('feedback-status');
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.disabled = true;
+        document.getElementById('feedback-submit').disabled = true;
+
+        fetch('https://discord.com/api/webhooks/1379940370061725759/wVmfbkCKG67FmYQR4a534WG4rC_7EeHJm3a2qSml-pJWf-Cel3D0dD_WMEOSQyvfFgqc', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: text })
+        }).then(res => {
+            status.textContent = "Feedback sent! Thank you.";
+            status.style.color = "green";
+            status.style.display = "block";
+            input.value = '';
+            showSnackbar('Feedback submitted!');
+            setTimeout(() => feedbackDialog.close(), 1200);
+        }).catch(() => {
+            status.textContent = "Failed to send feedback.";
+            status.style.color = "red";
+            status.style.display = "block";
+        }).finally(() => {
+            input.disabled = false;
+            document.getElementById('feedback-submit').disabled = false;
+        });
+    }
+
+    // Feedback submit button and Enter key handler
+    document.getElementById('feedback-submit').addEventListener('click', submitFeedback);
+    document.getElementById('feedback-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitFeedback();
         }
-        getMenuItemByTextAndMenu('Remove Notification', 'notification-bell-icon').addEventListener('click', () => {
-            updateKeywordList();
-            removeNotificationDialog.showModal();
-        });
+    });
 
-        removeNotificationDialog.querySelector('.close-remove').addEventListener('click', function() {
-            removeNotificationDialog.close();
-        });
+    // Open Discord link from Help menu
+    getHelpMenuItemByText('Discord').addEventListener('click', () => {
+        window.open('https://discord.gg/ynwTEHrmdx', '_blank');
+    });
 
-        // Remove Notification Dialog: remove keyword
-        function updateKeywordList() {
-            const list = document.getElementById('keyword-list');
-            let keywords = [];
-            try {
-                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
-            } catch (e) {
-                keywords = [];
-            }
-            list.innerHTML = '';
-            if (keywords.length === 0) {
-                list.innerHTML = '<li class="mdl-list__item">No keywords added.</li>';
-                return;
-            }
-            keywords.forEach((keyword, idx) => {
-                const li = document.createElement('li');
-                li.className = 'mdl-list__item';
-                li.style.display = 'flex';
-                li.style.alignItems = 'center';
-
-                const span = document.createElement('span');
-                span.className = 'mdl-list__item-primary-content';
-                span.textContent = keyword;
-
-                const iconBtn = document.createElement('button');
-                iconBtn.className = 'mdl-button mdl-js-button mdl-button--icon';
-                iconBtn.style.marginLeft = 'auto';
-                iconBtn.title = 'Remove';
-
-                const icon = document.createElement('i');
-                icon.className = 'material-icons';
-                icon.textContent = 'close';
-
-                iconBtn.appendChild(icon);
-                iconBtn.addEventListener('click', () => {
-                    const removed = keywords.splice(idx, 1);
-                    localStorage.setItem('auction_keywords', JSON.stringify(keywords));
-                    updateKeywordList();
-                    // Show snackbar for keyword removed
-                    showSnackbar('Keyword removed: ' + removed[0]);
-                });
-
-                li.appendChild(span);
-                li.appendChild(iconBtn);
-                list.appendChild(li);
+    // Past Auctions icon click handler
+    document.addEventListener("DOMContentLoaded", function() {
+        var pastAuctionIcon = document.getElementById('past-auction-icon');
+        if (pastAuctionIcon) {
+            pastAuctionIcon.addEventListener('click', function() {
+                window.location.href = "http://127.0.0.1:3000/past.html";
             });
         }
+    });
 
-        // --- Feedback Dialog Logic ---
-        const feedbackDialog = document.getElementById('feedback-dialog');
-        if (typeof dialogPolyfill !== "undefined" && feedbackDialog && !feedbackDialog.showModal) {
-            dialogPolyfill.registerDialog(feedbackDialog);
+    // Highlight bell icon if user has keywords
+    function updateBellHighlight() {
+        let keywords = [];
+        try {
+            keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+        } catch (e) {
+            keywords = [];
         }
-
-        // Feedback and Discord from help menu (use bell menu's sibling menu)
-        function getHelpMenuItemByText(text) {
-            const menu = document.querySelectorAll('#demo-menu-lower-right ~ ul.mdl-menu .mdl-menu__item');
-            return Array.from(menu).find(item => item.textContent.trim() === text);
-        }
-
-        getHelpMenuItemByText('Feedback').addEventListener('click', () => {
-            document.getElementById('feedback-input').value = '';
-            document.getElementById('feedback-status').style.display = 'none';
-            feedbackDialog.showModal();
-        });
-        feedbackDialog.querySelector('.close-feedback').addEventListener('click', function() {
-            feedbackDialog.close();
-        });
-
-        // Submit feedback on button click or Enter
-        function submitFeedback() {
-            const input = document.getElementById('feedback-input');
-            const status = document.getElementById('feedback-status');
-            const text = input.value.trim();
-            if (!text) return;
-
-            input.disabled = true;
-            document.getElementById('feedback-submit').disabled = true;
-
-            fetch('https://discord.com/api/webhooks/1379940370061725759/wVmfbkCKG67FmYQR4a534WG4rC_7EeHJm3a2qSml-pJWf-Cel3D0dD_WMEOSQyvfFgqc', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: text })
-            }).then(res => {
-                status.textContent = "Feedback sent! Thank you.";
-                status.style.color = "green";
-                status.style.display = "block";
-                input.value = '';
-                // Show snackbar for feedback sent
-                showSnackbar('Feedback submitted!');
-                setTimeout(() => feedbackDialog.close(), 1200);
-            }).catch(() => {
-                status.textContent = "Failed to send feedback.";
-                status.style.color = "red";
-                status.style.display = "block";
-            }).finally(() => {
-                input.disabled = false;
-                document.getElementById('feedback-submit').disabled = false;
-            });
-        }
-
-        document.getElementById('feedback-submit').addEventListener('click', submitFeedback);
-        document.getElementById('feedback-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitFeedback();
-            }
-        });
-
-        // --- Discord menu item logic ---
-        getHelpMenuItemByText('Discord').addEventListener('click', () => {
-            window.open('https://discord.gg/ynwTEHrmdx', '_blank');
-        });
-
-        // Add click handler for past auction icon
-        document.addEventListener("DOMContentLoaded", function() {
-            var pastAuctionIcon = document.getElementById('past-auction-icon');
-            if (pastAuctionIcon) {
-                pastAuctionIcon.addEventListener('click', function() {
-                    window.location.href = "http://127.0.0.1:3000/past.html";
-                });
-            }
-        });
-
-        // Highlight bell icon if user has keywords
-        function updateBellHighlight() {
-            let keywords = [];
-            try {
-                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
-            } catch (e) {
-                keywords = [];
-            }
-            const bellBtn = document.getElementById('notification-bell-icon');
-            if (bellBtn) {
-                if (keywords.length > 0) {
-                    bellBtn.style.backgroundColor = "#8d46ff"; // new color
-                } else {
-                    bellBtn.style.backgroundColor = "transparent";
-                }
-            }
-        }
-
-        // Call on load and after keyword changes
-        document.addEventListener("DOMContentLoaded", function() {
-            updateBellHighlight();
-            // Patch add/remove notification logic to update highlight
-            document.getElementById('dialog-ok').addEventListener('click', function() {
-                updateBellHighlight();
-            });
-            if (removeNotificationDialog) {
-                removeNotificationDialog.addEventListener('close', updateBellHighlight);
-            }
-        });
-
-        // Also update highlight after removing a keyword
-        function updateKeywordList() {
-            const list = document.getElementById('keyword-list');
-            let keywords = [];
-            try {
-                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
-            } catch (e) {
-                keywords = [];
-            }
-            list.innerHTML = '';
-            if (keywords.length === 0) {
-                list.innerHTML = '<li class="mdl-list__item">No keywords added.</li>';
-                return;
-            }
-            keywords.forEach((keyword, idx) => {
-                const li = document.createElement('li');
-                li.className = 'mdl-list__item';
-                li.style.display = 'flex';
-                li.style.alignItems = 'center';
-
-                const span = document.createElement('span');
-                span.className = 'mdl-list__item-primary-content';
-                span.textContent = keyword;
-
-                const iconBtn = document.createElement('button');
-                iconBtn.className = 'mdl-button mdl-js-button mdl-button--icon';
-                iconBtn.style.marginLeft = 'auto';
-                iconBtn.title = 'Remove';
-
-                const icon = document.createElement('i');
-                icon.className = 'material-icons';
-                icon.textContent = 'close';
-
-                iconBtn.appendChild(icon);
-                iconBtn.addEventListener('click', () => {
-                    const removed = keywords.splice(idx, 1);
-                    localStorage.setItem('auction_keywords', JSON.stringify(keywords));
-                    updateKeywordList();
-                    // Show snackbar for keyword removed
-                    showSnackbar('Keyword removed: ' + removed[0]);
-                });
-
-                li.appendChild(span);
-                li.appendChild(iconBtn);
-                list.appendChild(li);
-            });
-            // After updating keywords
-            updateBellHighlight();
-        }
-
-        // Export FAB functionality (replaces old export button)
-        document.getElementById('export-fab').addEventListener('click', function() {
-            fetch("auction_data.txt")
-                .then((response) => {
-                    if (!response.ok) throw new Error("Network response was not ok");
-                    return response.blob();
-                })
-                .then((blob) => {
-                    const a = document.createElement("a");
-                    a.href = URL.createObjectURL(blob);
-                    a.download = "auction_data.txt";
-                    document.body.appendChild(a);
-                    a.click();
-                    setTimeout(() => {
-                        URL.revokeObjectURL(a.href);
-                        document.body.removeChild(a);
-                    }, 100);
-                    if (typeof showSnackbar === 'function') showSnackbar("Auction data exported successfully!");
-                })
-                .catch((error) => {
-                    if (typeof showSnackbar === 'function') showSnackbar("Error exporting auction data.");
-                });
-        });
-
-        // Clipboard copy for each auction card
-        // This assumes your script.js renders cards into #auction-container
-        // and you can add a button like below to each card:
-        // <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored auction-card-copy-btn" title="Copy Auction" data-auction="{auctionText}">
-        //   <i class="material-icons">content_copy</i>
-        // </button>
-
-        // Attach clipboard logic after cards are rendered
-        function attachAuctionCardCopyHandlers() {
-            document.querySelectorAll('.auction-card-copy-btn').forEach(btn => {
-                btn.onclick = function () {
-                    const data = this.getAttribute('data-auction');
-                    if (data) {
-                        navigator.clipboard.writeText(data)
-                            .then(() => showSnackbar && showSnackbar("Auction copied to clipboard!"))
-                            .catch(() => showSnackbar && showSnackbar("Failed to copy auction."));
-                    }
-                };
-            });
-        }
-
-        // Patch updateAuctionData if present, otherwise patch after DOMContentLoaded
-        (function patchAuctionCardCopy() {
-            function patch() {
-                if (typeof window.updateAuctionData === "function" && !window.updateAuctionData.__clipboardPatched) {
-                    const origUpdate = window.updateAuctionData;
-                    window.updateAuctionData = function () {
-                        origUpdate.apply(this, arguments);
-                        setTimeout(attachAuctionCardCopyHandlers, 0);
-                    };
-                    window.updateAuctionData.__clipboardPatched = true;
-                    // Initial attach if cards already rendered
-                    setTimeout(attachAuctionCardCopyHandlers, 0);
-                }
-            }
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", patch);
+        const bellBtn = document.getElementById('notification-bell-icon');
+        if (bellBtn) {
+            if (keywords.length > 0) {
+                bellBtn.style.backgroundColor = "#8d46ff"; // Highlight color
             } else {
-                patch();
+                bellBtn.style.backgroundColor = "transparent";
             }
-        })();
-
-        // --- Optionally, check for keywords in your auction logic and notify user when found ---
-        // Play button logic
-        document.getElementById('play-btn').addEventListener('click', function() {
-            window.open('https://www.roblox.com/games/2317712696/The-Wild-West-4-0', '_blank');
-            if (typeof showSnackbar === 'function') showSnackbar("Game page opened!");
-        });
-
-        // Google Translate widget loader
-        function loadGoogleTranslate() {
-            if (document.getElementById('google-translate-script')) return;
-            var gt = document.createElement('script');
-            gt.id = 'google-translate-script';
-            gt.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            document.body.appendChild(gt);
         }
+    }
 
-        // Google Translate widget init
-        window.googleTranslateElementInit = function() {
-            if (!document.getElementById('google_translate_element')) {
-                var div = document.createElement('div');
-                div.id = 'google_translate_element';
-                div.style.position = 'fixed';
-                div.style.top = '60px';
-                div.style.right = '24px';
-                div.style.zIndex = '2000';
-                div.style.background = 'rgba(255,255,255,0.95)';
-                div.style.borderRadius = '8px';
-                div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-                div.style.padding = '6px 12px 6px 6px';
-                document.body.appendChild(div);
-            }
-            new window.google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: '', // empty means all languages
-                layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        };
-
-        // Language button click handler
-        document.getElementById('language-icon').addEventListener('click', function() {
-            loadGoogleTranslate();
-            // Show/hide the widget on repeated clicks
-            var el = document.getElementById('google_translate_element');
-            if (el) {
-                el.style.display = (el.style.display === 'none' ? 'block' : 'none');
-            }
+    // Update bell highlight on load and after keyword changes
+    document.addEventListener("DOMContentLoaded", function() {
+        updateBellHighlight();
+        document.getElementById('dialog-ok').addEventListener('click', function() {
+            updateBellHighlight();
         });
-        </script>
-    </body>
+        if (removeNotificationDialog) {
+            removeNotificationDialog.addEventListener('close', updateBellHighlight);
+        }
+    });
+
+    // Export FAB functionality to download auction data
+    document.getElementById('export-fab').addEventListener('click', function() {
+        fetch("auction_data.txt")
+            .then((response) => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.blob();
+            })
+            .then((blob) => {
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = "auction_data.txt";
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    URL.revokeObjectURL(a.href);
+                    document.body.removeChild(a);
+                }, 100);
+                if (typeof showSnackbar === 'function') showSnackbar("Auction data exported successfully!");
+            })
+            .catch((error) => {
+                if (typeof showSnackbar === 'function') showSnackbar("Error exporting auction data.");
+            });
+    });
+
+    // Clipboard copy for each auction card
+    function attachAuctionCardCopyHandlers() {
+        document.querySelectorAll('.auction-card-copy-btn').forEach(btn => {
+            btn.onclick = function () {
+                const data = this.getAttribute('data-auction');
+                if (data) {
+                    navigator.clipboard.writeText(data)
+                        .then(() => showSnackbar && showSnackbar("Auction copied to clipboard!"))
+                        .catch(() => showSnackbar && showSnackbar("Failed to copy auction."));
+                }
+            };
+        });
+    }
+
+    // Patch updateAuctionData to attach clipboard handlers after rendering
+    (function patchAuctionCardCopy() {
+        function patch() {
+            if (typeof window.updateAuctionData === "function" && !window.updateAuctionData.__clipboardPatched) {
+                const origUpdate = window.updateAuctionData;
+                window.updateAuctionData = function () {
+                    origUpdate.apply(this, arguments);
+                    setTimeout(attachAuctionCardCopyHandlers, 0);
+                };
+                window.updateAuctionData.__clipboardPatched = true;
+                setTimeout(attachAuctionCardCopyHandlers, 0);
+            }
+        }
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", patch);
+        } else {
+            patch();
+        }
+    })();
+
+    // Play button logic to open Roblox game
+    document.getElementById('play-btn').addEventListener('click', function() {
+        window.open('https://www.roblox.com/games/2317712696/The-Wild-West-4-0', '_blank');
+        if (typeof showSnackbar === 'function') showSnackbar("Game page opened!");
+    });
+
+    // Google Translate widget loader
+    function loadGoogleTranslate() {
+        if (document.getElementById('google-translate-script')) return;
+        var gt = document.createElement('script');
+        gt.id = 'google-translate-script';
+        gt.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        document.body.appendChild(gt);
+    }
+
+    // Google Translate widget initialization
+    window.googleTranslateElementInit = function() {
+        if (!document.getElementById('google_translate_element')) {
+            var div = document.createElement('div');
+            div.id = 'google_translate_element';
+            div.style.position = 'fixed';
+            div.style.top = '60px';
+            div.style.right = '24px';
+            div.style.zIndex = '2000';
+            div.style.background = 'rgba(255,255,255,0.95)';
+            div.style.borderRadius = '8px';
+            div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+            div.style.padding = '6px 12px 6px 6px';
+            document.body.appendChild(div);
+        }
+        new window.google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: '', // All languages
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    };
+
+    // Language button click handler to show/hide Google Translate widget
+    document.getElementById('language-icon').addEventListener('click', function() {
+        loadGoogleTranslate();
+        var el = document.getElementById('google_translate_element');
+        if (el) {
+            el.style.display = (el.style.display === 'none' ? 'block' : 'none');
+        }
+    });
+    </script>
+</body>
 </html>
