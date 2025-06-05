@@ -177,6 +177,12 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         auctionLines.splice(titleIndex, 1); // Remove the title line from auctionLines
                     }
 
+                    // --- Detect user keywords in this auction for chips ---
+                    let detectedKeywords = [];
+                    if (itemTitle && userKeywords.length > 0) {
+                        detectedKeywords = userKeywords.filter(kw => itemTitle.includes(kw));
+                    }
+
                     // Only make the info part (numbers/values) larger
                     const infoRegex = /(:\s*)([\d\w\$\.,#\- ]+)/g; // Regex to match info after colon
                     const displayContent = auctionLines
@@ -184,6 +190,19 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                             line.replace(infoRegex, (match, p1, p2) => `${p1}<span style="font-size:1.3em;">${p2}</span>`)
                         )
                         .join("<br>"); // Join lines for display
+
+                    // Build chips HTML
+                    let chipsHtml = "";
+                    if (detectedKeywords.length > 0) {
+                        chipsHtml = detectedKeywords.map(keyword => `
+                            <span class="mdl-chip mdl-chip--deletable" style="margin: 0 4px 0 0;">
+                                <span class="mdl-chip__text">${keyword}</span>
+                                <button type="button" class="mdl-chip__action" data-keyword="${keyword}">
+                                    <i class="material-icons">cancel</i>
+                                </button>
+                            </span>
+                        `).join("");
+                    }
 
                     // Return the HTML for this auction card
                     return `
@@ -199,10 +218,39 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                                     </div>
                                 </div>
                             </div>
+                            <!-- Chips section at the bottom -->
+                            <div class="auction-chips" style="
+                                width: 100%;
+                                background: rgba(255,255,255,0.18);
+                                border-top: 2px solid #fff3;
+                                padding: 8px 12px 8px 12px;
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: flex-start;
+                                align-items: center;
+                                min-height: 40px;
+                                box-sizing: border-box;
+                                border-radius: 0 0 4px 4px;
+                                ">
+                                ${chipsHtml}
+                            </div>
                         </div>
                     `;
                 })
                 .join(""); // Join all auction cards
+
+            // Add chip delete handlers
+            document.querySelectorAll('.mdl-chip__action[data-keyword]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const keyword = this.getAttribute('data-keyword');
+                    let keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+                    keywords = keywords.filter(k => k.trim().toLowerCase() !== keyword);
+                    localStorage.setItem('auction_keywords', JSON.stringify(keywords));
+                    // Optionally show snackbar if available
+                    if (typeof showSnackbar === 'function') showSnackbar('Keyword removed: ' + keyword);
+                    updateAuctionData();
+                });
+            });
 
             // Reset notifiedKeywords if auctions have changed (optional: can be improved)
             // This ensures notifications can be sent again if auctions are refreshed/changed
