@@ -204,10 +204,22 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         `).join("");
                     }
 
+                    // Clipboard button for this card
+                    const clipboardBtn = `
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored auction-card-copy-btn"
+                                title="Copy Auction"
+                                data-auction="${auction.replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+                            <i class="material-icons">content_copy</i>
+                        </button>
+                    `;
+
                     // Return the HTML for this auction card
                     return `
-                        <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor};">
+                        <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor}; position:relative;">
                             <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent; display: flex; flex-direction: column; min-height: 220px;">
+                                <div style="position:absolute;top:8px;right:8px;z-index:2;">
+                                    ${clipboardBtn}
+                                </div>
                                 ${titleHtml}
                                 <div style="flex:1 0 auto;">
                                     ${imageTag}
@@ -249,6 +261,18 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     // Optionally show snackbar if available
                     if (typeof showSnackbar === 'function') showSnackbar('Keyword removed: ' + keyword);
                     updateAuctionData();
+                });
+            });
+
+            // Clipboard copy handlers for each card
+            document.querySelectorAll('.auction-card-copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const data = this.getAttribute('data-auction');
+                    if (data) {
+                        navigator.clipboard.writeText(data)
+                            .then(() => typeof showSnackbar === 'function' && showSnackbar("Auction copied to clipboard!"))
+                            .catch(() => typeof showSnackbar === 'function' && showSnackbar("Failed to copy auction."));
+                    }
                 });
             });
 

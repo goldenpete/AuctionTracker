@@ -462,6 +462,48 @@
                 });
         });
 
+        // Clipboard copy for each auction card
+        // This assumes your script.js renders cards into #auction-container
+        // and you can add a button like below to each card:
+        // <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored auction-card-copy-btn" title="Copy Auction" data-auction="{auctionText}">
+        //   <i class="material-icons">content_copy</i>
+        // </button>
+
+        // Attach clipboard logic after cards are rendered
+        function attachAuctionCardCopyHandlers() {
+            document.querySelectorAll('.auction-card-copy-btn').forEach(btn => {
+                btn.onclick = function () {
+                    const data = this.getAttribute('data-auction');
+                    if (data) {
+                        navigator.clipboard.writeText(data)
+                            .then(() => showSnackbar && showSnackbar("Auction copied to clipboard!"))
+                            .catch(() => showSnackbar && showSnackbar("Failed to copy auction."));
+                    }
+                };
+            });
+        }
+
+        // Patch updateAuctionData if present, otherwise patch after DOMContentLoaded
+        (function patchAuctionCardCopy() {
+            function patch() {
+                if (typeof window.updateAuctionData === "function" && !window.updateAuctionData.__clipboardPatched) {
+                    const origUpdate = window.updateAuctionData;
+                    window.updateAuctionData = function () {
+                        origUpdate.apply(this, arguments);
+                        setTimeout(attachAuctionCardCopyHandlers, 0);
+                    };
+                    window.updateAuctionData.__clipboardPatched = true;
+                    // Initial attach if cards already rendered
+                    setTimeout(attachAuctionCardCopyHandlers, 0);
+                }
+            }
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", patch);
+            } else {
+                patch();
+            }
+        })();
+
         // --- Optionally, check for keywords in your auction logic and notify user when found ---
         </script>
     </body>
