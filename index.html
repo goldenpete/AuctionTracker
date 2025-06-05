@@ -75,16 +75,27 @@
                 -->
                 <!-- Button to manually refresh auction data -->
 
+                <!--
                 <button id="export-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
                     Export Data
                 </button>
+                -->
                 <!-- Button to export auction data -->
 
+                <!--
                 <button id="add-auction-button" class="mdl-button mdl-js-button mdl-button--raised">
                     Past Auctions
                 </button>
+                -->
                 <!-- Button to redirect to past auctions -->
             </div>
+
+            <!-- Fixed Export FAB in bottom right corner -->
+            <button id="export-fab"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--accent"
+                style="position:fixed;bottom:24px;right:24px;z-index:1000;">
+                <i class="material-icons">download</i>
+            </button>
         </div>
 
         <!-- Add Notification Dialog -->
@@ -426,6 +437,30 @@
             // After updating keywords
             updateBellHighlight();
         }
+
+        // Export FAB functionality (replaces old export button)
+        document.getElementById('export-fab').addEventListener('click', function() {
+            fetch("auction_data.txt")
+                .then((response) => {
+                    if (!response.ok) throw new Error("Network response was not ok");
+                    return response.blob();
+                })
+                .then((blob) => {
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "auction_data.txt";
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        URL.revokeObjectURL(a.href);
+                        document.body.removeChild(a);
+                    }, 100);
+                    if (typeof showSnackbar === 'function') showSnackbar("Auction data exported successfully!");
+                })
+                .catch((error) => {
+                    if (typeof showSnackbar === 'function') showSnackbar("Error exporting auction data.");
+                });
+        });
 
         // --- Optionally, check for keywords in your auction logic and notify user when found ---
         </script>
