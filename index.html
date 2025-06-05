@@ -14,23 +14,34 @@
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- Load Material Design Lite JS (deferred) -->
         <script src="./script.js"></script> <!-- Load custom JavaScript -->
 
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"> <!-- Main layout container with fixed header -->
-            <header class="mdl-layout__header"> <!-- Header section -->
-                <div class="mdl-layout__header-row"> <!-- Row inside header for content alignment -->
-                    <span class="mdl-layout-title">Auction House Status</span> <!-- Page title in the header -->
-                    <!-- Right aligned menu below button -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row" style="padding-left:0;padding-right:0;display:flex;align-items:center;justify-content:space-between;">
+                    <!-- Refresh Icon Button in the top left -->
+                    <button id="refresh-button"
+                            class="mdl-button mdl-js-button mdl-button--icon"
+                            title="Refresh Auctions"
+                            style="margin-left:0;">
+                        <i class="material-icons">refresh</i>
+                    </button>
+                    <!-- Title centered -->
+                    <span class="mdl-layout-title" style="flex:1;text-align:center;margin:0;font-size:1.25rem;">
+                        Auction House Status
+                    </span>
+                    <!-- 3-dot menu in the top right -->
+                    <span style="display:flex;align-items:center;">
                         <button id="demo-menu-lower-right"
                                 class="mdl-button mdl-js-button mdl-button--icon">
-                        <i class="material-icons">more_vert</i>
+                            <i class="material-icons">more_vert</i>
                         </button>
-
                         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                             for="demo-menu-lower-right">
-                        <li class="mdl-menu__item">Add Notification</li>
-                        <li class="mdl-menu__item">Remove Notification</li>
-                        <li class="mdl-menu__item">Feedback</li>
-                        <li class="mdl-menu__item">Discord</li>
+                            <li class="mdl-menu__item">Add Notification</li>
+                            <li class="mdl-menu__item">Remove Notification</li>
+                            <li class="mdl-menu__item">Feedback</li>
+                            <li class="mdl-menu__item">Discord</li>
                         </ul>
+                    </span>
                 </div>
             </header>
 
@@ -38,10 +49,12 @@
                 <!-- Auctions will be dynamically added here -->
             </div>
 
-            <div id="action-buttons" style="text-align: center; margin-top: 24px;"> <!-- Container for action buttons, centered with margin -->
+            <div id="action-buttons" style="text-align: center; margin-top: 24px;">
+                <!--
                 <button id="refresh-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     Refresh Auctions
                 </button>
+                -->
                 <!-- Button to manually refresh auction data -->
 
                 <button id="export-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">
