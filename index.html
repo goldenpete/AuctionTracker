@@ -174,6 +174,19 @@
         <button class="mdl-snackbar__action" type="button"></button>
     </div>
 
+    <!-- Announcement Banner Overlay (darkens background when banner is shown) -->
+    <div id="announcement-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);z-index:1999;"></div>
+
+    <!-- Announcement Banner (centered in the middle of the screen, MDL style, with close button) -->
+    <div id="announcement-banner" class="mdl-shadow--2dp"
+         style="display:none;background:#ffecb3;color:#333;padding:12px 24px;text-align:center;font-weight:bold;font-size:1.1em;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2000;max-width:90vw;min-width:180px;max-width:600px;border-radius:6px;box-sizing:border-box;white-space:pre-line;">
+        <span id="announcement-text"></span>
+        <button id="announcement-close" class="mdl-button mdl-js-button mdl-button--icon"
+                style="position:absolute;right:8px;top:8px;">
+            <i class="material-icons">close</i>
+        </button>
+    </div>
+
     <!-- Main script block for all UI logic and event handlers -->
     <script>
     // Helper function to get the Add Notification menu item
@@ -512,6 +525,53 @@
         if (el) {
             el.style.display = (el.style.display === 'none' ? 'block' : 'none');
         }
+    });
+
+    // Announcement banner logic
+    function loadAnnouncement() {
+        fetch("announcement.txt", {cache: "no-store"})
+            .then(res => res.text())
+            .then(text => {
+                const banner = document.getElementById('announcement-banner');
+                const bannerText = document.getElementById('announcement-text');
+                const overlay = document.getElementById('announcement-overlay');
+                if (text && text.trim().length > 0) {
+                    bannerText.textContent = text.trim();
+                    banner.style.display = "block";
+                    if (overlay) overlay.style.display = "block";
+                } else {
+                    banner.style.display = "none";
+                    if (overlay) overlay.style.display = "none";
+                }
+            })
+            .catch(() => {
+                // Hide banner and overlay if fetch fails
+                const banner = document.getElementById('announcement-banner');
+                const overlay = document.getElementById('announcement-overlay');
+                if (banner) banner.style.display = "none";
+                if (overlay) overlay.style.display = "none";
+            });
+    }
+
+    // Close button for announcement banner
+    document.addEventListener("DOMContentLoaded", function() {
+        const closeBtn = document.getElementById('announcement-close');
+        const overlay = document.getElementById('announcement-overlay');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                const banner = document.getElementById('announcement-banner');
+                if (banner) banner.style.display = "none";
+                if (overlay) overlay.style.display = "none";
+            });
+        }
+        if (overlay) {
+            overlay.addEventListener('click', function() {
+                const banner = document.getElementById('announcement-banner');
+                overlay.style.display = "none";
+                if (banner) banner.style.display = "none";
+            });
+        }
+        loadAnnouncement(); // Load on page load
     });
     </script>
 </body>
