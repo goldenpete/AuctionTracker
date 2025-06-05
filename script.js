@@ -213,9 +213,19 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                         </button>
                     `;
 
+                    // Info button for this card (top left)
+                    const infoBtn = `
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored auction-card-info-btn"
+                                title="Info"
+                                style="position:absolute;top:8px;left:8px;z-index:2;">
+                            <i class="material-icons">info</i>
+                        </button>
+                    `;
+
                     // Return the HTML for this auction card
                     return `
                         <div class="mdl-card mdl-shadow--2dp" style="background-color: ${cardColor}; position:relative;">
+                            ${infoBtn}
                             <div class="mdl-card__title mdl-card--expand page-content" style="background: transparent; display: flex; flex-direction: column; min-height: 220px;">
                                 <div style="position:absolute;top:8px;right:8px;z-index:2;">
                                     ${clipboardBtn}
@@ -273,6 +283,13 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                             .then(() => typeof showSnackbar === 'function' && showSnackbar("Auction copied to clipboard!"))
                             .catch(() => typeof showSnackbar === 'function' && showSnackbar("Failed to copy auction."));
                     }
+                });
+            });
+
+            // Snackbar on info button click
+            document.querySelectorAll('.auction-card-info-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    if (typeof showSnackbar === 'function') showSnackbar("Coming Soon!");
                 });
             });
 
