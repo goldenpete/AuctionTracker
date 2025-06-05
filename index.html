@@ -28,16 +28,34 @@
                     <span class="mdl-layout-title" style="flex:1;text-align:center;margin:0;font-size:1.25rem;">
                         Auction House Status
                     </span>
-                    <!-- 3-dot menu in the top right -->
+                    <!-- Icons in the top right -->
                     <span style="display:flex;align-items:center;">
+                        <!-- Past Auctions Icon Button -->
+                        <button id="past-auction-icon"
+                                class="mdl-button mdl-js-button mdl-button--icon"
+                                title="Past Auctions">
+                            <i class="material-icons">history</i>
+                        </button>
+                        <!-- Bell Icon Button with its own menu -->
+                        <button id="notification-bell-icon"
+                                class="mdl-button mdl-js-button mdl-button--icon"
+                                title="Notifications"
+                                style="background-color:transparent;transition:background 0.2s;">
+                            <i class="material-icons">notifications</i>
+                        </button>
+                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                            for="notification-bell-icon">
+                            <li class="mdl-menu__item">Add Notification</li>
+                            <li class="mdl-menu__item">Remove Notification</li>
+                        </ul>
+                        <!-- Help Icon Button (was 3-dot menu) -->
                         <button id="demo-menu-lower-right"
-                                class="mdl-button mdl-js-button mdl-button--icon">
-                            <i class="material-icons">more_vert</i>
+                                class="mdl-button mdl-js-button mdl-button--icon"
+                                title="Help / Menu">
+                            <i class="material-icons">help_outline</i>
                         </button>
                         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
                             for="demo-menu-lower-right">
-                            <li class="mdl-menu__item">Add Notification</li>
-                            <li class="mdl-menu__item">Remove Notification</li>
                             <li class="mdl-menu__item">Feedback</li>
                             <li class="mdl-menu__item">Discord</li>
                         </ul>
@@ -130,12 +148,19 @@
             return Array.from(menu).find(item => item.textContent.trim() === 'Add Notification');
         }
 
-        // Show dialog on menu click
+        // Helper to get menu items by text and parent menu
+        function getMenuItemByTextAndMenu(text, menuId) {
+            const menu = document.querySelectorAll(`#${menuId} ~ ul.mdl-menu .mdl-menu__item`);
+            return Array.from(menu).find(item => item.textContent.trim() === text);
+        }
+
+        // Show dialog on bell menu click
         const addNotificationDialog = document.getElementById('add-notification-dialog');
         if (!addNotificationDialog.showModal) {
             dialogPolyfill.registerDialog(addNotificationDialog);
         }
-        getAddNotificationMenuItem().addEventListener('click', () => {
+        // Add Notification from bell menu
+        getMenuItemByTextAndMenu('Add Notification', 'notification-bell-icon').addEventListener('click', () => {
             addNotificationDialog.showModal();
         });
 
@@ -184,19 +209,12 @@
             }
         });
 
-        // Helper to get menu items
-        function getMenuItemByText(text) {
-            const menu = document.querySelectorAll('.mdl-menu__item');
-            return Array.from(menu).find(item => item.textContent.trim() === text);
-        }
-
-        // --- Remove Notification Dialog Logic ---
+        // Remove Notification from bell menu
         const removeNotificationDialog = document.getElementById('remove-notification-dialog');
         if (typeof dialogPolyfill !== "undefined" && removeNotificationDialog && !removeNotificationDialog.showModal) {
             dialogPolyfill.registerDialog(removeNotificationDialog);
         }
-
-        getMenuItemByText('Remove Notification').addEventListener('click', () => {
+        getMenuItemByTextAndMenu('Remove Notification', 'notification-bell-icon').addEventListener('click', () => {
             updateKeywordList();
             removeNotificationDialog.showModal();
         });
@@ -258,7 +276,14 @@
         if (typeof dialogPolyfill !== "undefined" && feedbackDialog && !feedbackDialog.showModal) {
             dialogPolyfill.registerDialog(feedbackDialog);
         }
-        getMenuItemByText('Feedback').addEventListener('click', () => {
+
+        // Feedback and Discord from help menu (use bell menu's sibling menu)
+        function getHelpMenuItemByText(text) {
+            const menu = document.querySelectorAll('#demo-menu-lower-right ~ ul.mdl-menu .mdl-menu__item');
+            return Array.from(menu).find(item => item.textContent.trim() === text);
+        }
+
+        getHelpMenuItemByText('Feedback').addEventListener('click', () => {
             document.getElementById('feedback-input').value = '';
             document.getElementById('feedback-status').style.display = 'none';
             feedbackDialog.showModal();
@@ -308,11 +333,101 @@
         });
 
         // --- Discord menu item logic ---
-        getMenuItemByText('Discord').addEventListener('click', () => {
+        getHelpMenuItemByText('Discord').addEventListener('click', () => {
             window.open('https://discord.gg/ynwTEHrmdx', '_blank');
         });
 
-        // Optionally, check for keywords in your auction logic and notify user when found
+        // Add click handler for past auction icon
+        document.addEventListener("DOMContentLoaded", function() {
+            var pastAuctionIcon = document.getElementById('past-auction-icon');
+            if (pastAuctionIcon) {
+                pastAuctionIcon.addEventListener('click', function() {
+                    window.location.href = "http://127.0.0.1:3000/past.html";
+                });
+            }
+        });
+
+        // Highlight bell icon if user has keywords
+        function updateBellHighlight() {
+            let keywords = [];
+            try {
+                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+            } catch (e) {
+                keywords = [];
+            }
+            const bellBtn = document.getElementById('notification-bell-icon');
+            if (bellBtn) {
+                if (keywords.length > 0) {
+                    bellBtn.style.backgroundColor = "#8d46ff"; // new color
+                } else {
+                    bellBtn.style.backgroundColor = "transparent";
+                }
+            }
+        }
+
+        // Call on load and after keyword changes
+        document.addEventListener("DOMContentLoaded", function() {
+            updateBellHighlight();
+            // Patch add/remove notification logic to update highlight
+            document.getElementById('dialog-ok').addEventListener('click', function() {
+                updateBellHighlight();
+            });
+            if (removeNotificationDialog) {
+                removeNotificationDialog.addEventListener('close', updateBellHighlight);
+            }
+        });
+
+        // Also update highlight after removing a keyword
+        function updateKeywordList() {
+            const list = document.getElementById('keyword-list');
+            let keywords = [];
+            try {
+                keywords = JSON.parse(localStorage.getItem('auction_keywords') || '[]');
+            } catch (e) {
+                keywords = [];
+            }
+            list.innerHTML = '';
+            if (keywords.length === 0) {
+                list.innerHTML = '<li class="mdl-list__item">No keywords added.</li>';
+                return;
+            }
+            keywords.forEach((keyword, idx) => {
+                const li = document.createElement('li');
+                li.className = 'mdl-list__item';
+                li.style.display = 'flex';
+                li.style.alignItems = 'center';
+
+                const span = document.createElement('span');
+                span.className = 'mdl-list__item-primary-content';
+                span.textContent = keyword;
+
+                const iconBtn = document.createElement('button');
+                iconBtn.className = 'mdl-button mdl-js-button mdl-button--icon';
+                iconBtn.style.marginLeft = 'auto';
+                iconBtn.title = 'Remove';
+
+                const icon = document.createElement('i');
+                icon.className = 'material-icons';
+                icon.textContent = 'close';
+
+                iconBtn.appendChild(icon);
+                iconBtn.addEventListener('click', () => {
+                    const removed = keywords.splice(idx, 1);
+                    localStorage.setItem('auction_keywords', JSON.stringify(keywords));
+                    updateKeywordList();
+                    // Show snackbar for keyword removed
+                    showSnackbar('Keyword removed: ' + removed[0]);
+                });
+
+                li.appendChild(span);
+                li.appendChild(iconBtn);
+                list.appendChild(li);
+            });
+            // After updating keywords
+            updateBellHighlight();
+        }
+
+        // --- Optionally, check for keywords in your auction logic and notify user when found ---
         </script>
     </body>
 </html>
