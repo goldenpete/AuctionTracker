@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                     // Build image tag, possibly wrapped in a link
                     let imageTag = `<img src="${imageSrc}" alt="${itemTitle || "Auction Item"}" style="max-width: 100px; float: right; padding: 5px;">`;
                     if (matchedKeyword && linkMap[matchedKeyword]) {
-                        imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank">${imageTag}</a>`;
+                        imageTag = `<a href="${linkMap[matchedKeyword]}" target="_blank" class="auction-image-link">${imageTag}</a>`;
                     }
 
                     // Extract and remove the title line for separate placement
@@ -276,6 +276,13 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
                 });
             });
 
+            // Snackbar on image link click
+            document.querySelectorAll('.auction-image-link').forEach(link => {
+                link.addEventListener('click', function () {
+                    if (typeof showSnackbar === 'function') showSnackbar("Wiki page opened!");
+                });
+            });
+
             // Reset notifiedKeywords if auctions have changed (optional: can be improved)
             // This ensures notifications can be sent again if auctions are refreshed/changed
             notifiedKeywords = new Set();
@@ -310,6 +317,7 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
         refreshButton.addEventListener("click", () => {
             console.log("Manual auction refresh triggered!"); // Log refresh
             updateAuctionData(); // Update auction data
+            if (typeof showSnackbar === 'function') showSnackbar("Auction refreshed!");
         });
     }
 
@@ -328,6 +336,12 @@ document.addEventListener("DOMContentLoaded", function () { // Wait for the DOM 
             console.log("Redirecting to add auction page..."); // Log redirect
         });
     }
+
+    // --- Discord menu item logic ---
+    getHelpMenuItemByText('Discord').addEventListener('click', () => {
+        window.open('https://discord.gg/ynwTEHrmdx', '_blank');
+        if (typeof showSnackbar === 'function') showSnackbar("Discord link opened!");
+    });
 
     setInterval(updateAuctionData, 10000); // Automatic updates every 10 seconds
 });
